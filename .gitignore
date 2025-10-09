@@ -1,6 +1,7 @@
 cat > .gitignore <<'EOF'
 node_modules/
-.env
+.venv/
+venv/
 .DS_Store
 .vscode/
 dist/
@@ -12,6 +13,5 @@ reports/
 videos/
 trace.zip
 __pycache__/
-.venv
 *.pyc
 EOF
