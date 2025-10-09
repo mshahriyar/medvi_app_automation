@@ -22,7 +22,7 @@ def test_am_i_qualified(add_height_weight, goal_weight, gender_and_age, experien
     experience_illness.hit_next_button()
 
     # Step 6: Select priority
-    priority.select_priority(user_data["priority"])
+    priority.select_goal(user_data["priority"])
     priority.hit_next_button()
 
     # Step 7: Verify rank

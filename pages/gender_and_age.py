@@ -14,7 +14,18 @@ class GenderAndAgePage:
         self.age_input = self.frame.locator("(//div[@data-cy='dropdown-component'])[1]//input")
         self.next_button = self.frame.locator("//button[@data-cy='button-component']")
 
+    def _select_from_dropdown(self, dropdown, value: str, index: int):
+        """Reusable dropdown selection with built-in waiting & validation."""
+        dropdown.wait_for(state="visible", timeout=10000)
+        dropdown.click(timeout=10000)
+        dropdown.fill(value)
+        self.page.keyboard.press("Enter")
 
+        selected_option = self.frame.locator(
+            f"(//div[@data-cy='dropdown-component'])[{index}]//div[contains(text(), '{value}')]"
+        )
+        expect(selected_option).to_be_visible(timeout=5000)
+        
     def select_gender(self, gender_value: str):
         locator = self.gender_selection.format(gender=gender_value)
         gender_option = self.frame.locator(locator)
@@ -23,13 +34,8 @@ class GenderAndAgePage:
         
 
     def select_age(self, age: str):
-        """Select 'Age' value from dropdown."""
-        self.age_input.click(timeout=10000)
-        self.page.wait_for_timeout(5000)
-        self.age_input.fill(age)
-        self.page.wait_for_timeout(2000)
-        self.page.keyboard.press("Enter")
-    
+        self._select_from_dropdown(self.age_input, age, index=1)
+
     def hit_next_button(self):
         """Click the 'Next' button and verify it's disabled afterward."""
         self.next_button.click(timeout=10000)

@@ -12,5 +12,6 @@ reports/
 videos/
 trace.zip
 __pycache__/
+.venv
 *.pyc
 EOF

@@ -91,8 +91,8 @@ def user_data():
     goal_weight = str(rnd.randint(90, int(weight) - 20))
 
     # Demographics
-    gender = rnd.choice(["Male", "Female"])
-    experience_illness = rnd.choice(["Low Libido or Erectile Dysfunction ", "Hair Loss", "Skin Issues", "Cognition Issues", "None of these"])
+    gender = rnd.choice(["Male"])
+    experience_illness = rnd.choice(["Low Libido or Erectile Dysfunction", "Hair Loss", "Skin Issues", "Cognition Issues", "None of these"])
     priority = rnd.choice(["Lose Weight", "Gain Muscle", "Maintain My Current Body"])
     age_range = rnd.choice(["18–28", "29–39", "40-50", "51–61", "62+"])
 

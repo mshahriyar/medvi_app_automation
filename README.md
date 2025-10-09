@@ -1,35 +1,74 @@
-# madvi_automation_project
+## ⚙️ Project Setup Guide (macOS / Linux)
 
-How to run the tests locally
+Follow these steps to set up and run the **MEDVI App Automation Project** safely on a new machine.
 
-1. Activate the virtual environment (zsh):
+---
 
+### 🧩 1. Install Python (via Homebrew)
+If Python is not installed, run:
 ```bash
-source /Users/shahriyar/Documents/madvi_automation_project/.venv/bin/activate
-```
+brew install python
+If you see a permissions error such as
+Error: /opt/homebrew/Cellar is not writable,
+fix it by granting ownership of the Homebrew directory:
 
-2. Install dependencies (if not already installed):
+bash
+Copy code
+sudo chown -R $(whoami) /opt/homebrew
+chmod u+w /opt/homebrew
+Then verify installation:
 
-```bash
+bash
+Copy code
+python3 --version
+pip3 --version
+🧱 2. Create and Activate a Virtual Environment
+From the project root folder (where requirements.txt exists):
+
+bash
+Copy code
+python3 -m venv .venv
+source .venv/bin/activate
+You should now see:
+
+scss
+Copy code
+(.venv) username@MacBook % 
+🧰 3. Upgrade pip and Install Dependencies
+Inside the virtual environment:
+
+bash
+Copy code
+python -m pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
-```
+🧪 4. Install Playwright Browsers
+Only required once (downloads Chromium, Firefox, WebKit):
 
-3. Install Playwright browsers (required for tests that launch browsers):
+bash
+Copy code
+playwright install
+🧭 5. Verify Environment
+Run the following to confirm everything is installed correctly:
 
-```bash
-python -m playwright install --with-deps
-```
+bash
+Copy code
+which python
+which pip
+python --version
+pip --version
+Both paths should point inside your .venv directory.
 
-4. Run tests with pytest:
+🚀 6. Run Tests
+Execute all tests with:
 
-```bash
-cd /Users/shahriyar/Documents/madvi_automation_project
-pytest -vv
-```
+bash:
+pytest -v -s
 
-Options:
-- To run headed (show browser UI) set `HEADLESS=0` and use the pytest-playwright plugin's configuration or environment variables as needed.
-- If `pytest` is not found, ensure the venv is activated and `pytest` is installed into that environment.
+Install playwright with pytest:
+pip install pytest-playwright
 
-Notes:
-- `conftest.py` intentionally avoids custom Playwright fixtures. The project uses the `pytest-playwright` plugin which provides `page`, `context`, and `browser` fixtures. Use the plugin fixtures in tests.
+Verify:
+pytest --fixtures | grep page
+
+Playwright:
+playwright install
