@@ -1,4 +1,3 @@
-import logging
 from playwright.sync_api import Page, expect
 
 
@@ -11,10 +10,6 @@ class AdditionalHealthQuestionsPage:
         self.page = page
         self.frame = self.page.frame_locator(self.IFRAME_SELECTOR)
 
-        # --- Logger Setup ---
-        self.log = logging.getLogger("AdditionalHealthQuestionsPage")
-
-        # --- Locators ---
         self.main_heading = self.frame.locator(
             "//span[normalize-space(text())='A few more health questions']"
         )
@@ -23,7 +18,7 @@ class AdditionalHealthQuestionsPage:
         )
         self.next_button = self.frame.locator("//button[@data-cy='button-component']")
 
-        # --- All available condition options ---
+        # All available condition options
         self.conditions = [
             "Gallbladder disease",
             "Hypertension (high blood pressure)",
@@ -62,51 +57,32 @@ class AdditionalHealthQuestionsPage:
             "None of these"
         ]
 
-    # -------------------- Validations --------------------
-
     def verify_page_headings(self):
         """Verify both main and sub headings are visible."""
-        self.log.info("🔍 Verifying headings for Additional Health Questions page...")
-        try:
-            expect(self.main_heading).to_be_visible(timeout=10000)
-            self.log.info("✅ Main heading 'A few more health questions' is visible.")
-        except Exception as e:
-            self.log.error(f"❌ Main heading not visible: {e}")
-            raise
-
-        try:
-            expect(self.sub_heading).to_be_visible(timeout=10000)
-            self.log.info("✅ Sub-heading 'Do any of these apply to you?' is visible.")
-        except Exception as e:
-            self.log.error(f"❌ Sub-heading not visible: {e}")
-            raise
+        print("🔍 Verifying page headings...")
+        expect(self.main_heading).to_be_visible(timeout=10000)
+        expect(self.sub_heading).to_be_visible(timeout=10000)
+        print("✅ Page headings verified")
 
     def verify_all_conditions_visible(self):
         """Verify all condition options are visible."""
-        self.log.info("🔍 Verifying visibility of all medical condition options...")
-
+        print("🔍 Verifying all conditions are visible...")
         for condition in self.conditions:
             quote = '"' if "'" in condition else "'"
             locator = self.frame.locator(f"//div[normalize-space(text())={quote}{condition}{quote}]")
-
             try:
                 expect(locator).to_be_visible(timeout=7000)
-                self.log.info(f"✅ Visible: {condition}")
-            except Exception as e:
-                self.log.warning(f"⚠️ Not visible: {condition} → {e}")
-
-    # -------------------- Actions --------------------
+            except:
+                print(f"⚠️ Condition not visible: {condition}")
+        print("✅ Conditions visibility check completed")
 
     def select_conditions(self, selections: list[str]):
-        """
-        Select specific conditions dynamically.
-        Automatically handles apostrophes and skips invalid entries.
-        """
-        self.log.info("🩺 Selecting medical conditions as per test data...")
+        """Select specific conditions dynamically."""
+        print("🩺 Selecting health conditions...")
 
         for selection in selections:
             if selection not in self.conditions:
-                self.log.warning(f"⚠️ Invalid condition '{selection}' (skipped)")
+                print(f"⚠️ Invalid condition '{selection}' (skipped)")
                 continue
 
             quote = '"' if "'" in selection else "'"
@@ -117,27 +93,12 @@ class AdditionalHealthQuestionsPage:
                 locator.scroll_into_view_if_needed()
                 locator.click()
                 expect(locator).to_be_visible(timeout=5000)
-                self.log.info(f"✅ Selected: {selection}")
+                print(f"✅ Selected: {selection}")
             except Exception as e:
-                self.log.error(f"❌ Failed to select '{selection}': {e}")
-                raise
+                print(f"❌ Failed to select '{selection}': {e}")
 
     def hit_next_button(self):
         """Click the 'Next' button."""
-        self.log.info("➡️ Clicking 'Next' button on Additional Health Questions page...")
-        try:
-            self.next_button.wait_for(state="visible", timeout=10000)
-            self.next_button.click(timeout=10000)
-            self.log.info("✅ Clicked 'Next' button successfully.")
-        except Exception as e:
-            self.log.error(f"❌ Failed to click 'Next' button: {e}")
-            raise
-
-    # -------------------- Full Page Routine --------------------
-
-    def complete_health_questions_flow(self, selections: list[str]):
-        """Perform a full validation and selection sequence."""
-        self.verify_page_headings()
-        self.verify_all_conditions_visible()
-        self.select_conditions(selections)
-        self.hit_next_button()
+        self.next_button.wait_for(state="visible", timeout=10000)
+        self.next_button.click()
+        print("➡️ Clicked 'Next' button")

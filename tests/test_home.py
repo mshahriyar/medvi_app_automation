@@ -5,29 +5,29 @@ from datetime import datetime
 @pytest.mark.critical
 @pytest.mark.ui
 @pytest.mark.regression
-def test_am_i_qualified(add_height_weight, goal_weight, gender_and_age, experience_illness, priority, rank, metabolic_graph, gpl, frank_new_man, reasons, lose_weight, analyze_metabolism, sleep_check, sleep_hours, body_review, health_conditions, additional_health_questions, user_data):
+def test_am_i_qualified(home_page, height_weight_page, goal_weight, gender_and_age, experience_illness, priority, rank, metabolic_graph, gpl, frank_new_man, reasons, lose_weight, analyze_metabolism, sleep_check, sleep_hours, body_review, health_conditions, additional_health_questions, user_data):
 
     print("🚀 Starting MEDVi Qualification Flow Test")
     print("=" * 50)
 
-    # Step 1: Navigate to MEDVi and validate home page
-    print("Step 1: Navigate to MEDVi and validate home page")
-    add_height_weight.open()
-    add_height_weight.click_get_started()
-    add_height_weight.wait_for_iframe_ready()
-    print("✅ Home page loaded successfully")
+    # Step 1: Navigate to MEDVi and click qualification button
+    print("Step 1: Navigate to MEDVi and click qualification button")
+    home_page.open()
+    home_page.click_get_started()
+    print("✅ Home page navigation completed successfully")
 
     # Step 2: Fill height and weight form
     print("Step 2: Fill height and weight form")
-    add_height_weight.select_feet(user_data["feet"])
-    add_height_weight.select_inches(user_data["inches"])
-    add_height_weight.add_weight(user_data["weight"])
+    height_weight_page.wait_for_iframe_ready()
+    height_weight_page.select_feet(user_data["feet"])
+    height_weight_page.select_inches(user_data["inches"])
+    height_weight_page.add_weight(user_data["weight"])
 
     # Verify form was filled correctly
     print("🔍 Verifying form data was entered correctly...")
     print(f"Height: {user_data['feet']}ft {user_data['inches']}in, Weight: {user_data['weight']}lbs")
 
-    add_height_weight.hit_next_button()
+    height_weight_page.hit_next_button()
     print("✅ Height and weight verification completed successfully")
 
     # Step 3: Set goal weight
@@ -147,3 +147,6 @@ def test_am_i_qualified(add_height_weight, goal_weight, gender_and_age, experien
     ])
     additional_health_questions.hit_next_button()
     print("✅ Additional health questions verification completed successfully")
+
+    print("\n🎉 All steps completed successfully!")
+    print("=" * 50)

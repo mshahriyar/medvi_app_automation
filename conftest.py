@@ -1,4 +1,3 @@
-
 import logging
 import os
 import random as rnd
@@ -6,25 +5,26 @@ import pytest
 from playwright.sync_api import sync_playwright
 from config.config import BASE_URL
 from datetime import datetime
-from pages.experience_illness import ExperienceIllnessPage
-from pages.gender_and_age import GenderAndAgePage
-from pages.height_and_weight import AddHeightAndWeight
-from pages.goal_weight import GoalWeightPage
-from pages.priority import PriorityPage
+from pages.home_page import HomePage
+from pages.height_weight_page import HeightWeightPage
+from pages.goal_weight_page import GoalWeightPage
+from pages.gender_age_page import GenderAndAgePage
+from pages.experience_illness_page import ExperienceIllnessPage
+from pages.priority_page import PriorityPage
+from pages.rank_page import RankPage
+from pages.metabolic_graph_page import MetabolicGraphPage
+from pages.glp1_page import GLP1Page
+from pages.frank_new_man_page import FrankNewManPage
+from pages.reasons_page import ReasonsPage
+from pages.lose_weight_page import LoseWeightPage
+from pages.analyze_metabolism_page import AnalyzeMetabolismPage
+from pages.sleep_check_page import SleepCheckPage
+from pages.sleep_hours_page import SleepHoursPage
+from pages.body_review_page import BodyReviewPage
+from pages.health_conditions_page import HealthConditionsPage
+from pages.additional_health_questions_page import AdditionalHealthQuestionsPage
 import csv
-from datetime import datetime
-from pages.metabolic_graph import MetabolicGraphPage
-from pages.glp import GPL1Page
-from pages.rank import RankPage
-from pages.frank_new_man import FrankNewManPage
-from pages.reasons import ReasonsPage
-from pages.lose_weight import LoseWeightPage
-from pages.analyze_metabolism import AnalyzeMetabolismPage
-from pages.sleep_check import SleepCheckPage
-from pages.sleep_hours import SleepHoursPage
-from pages.body_review import BodyReviewPage
-from pages.health_conditions import HealthConditionsPage
-from pages.additional_health_questions import AdditionalHealthQuestionsPage
+
 # --------------------- Logging Configuration --------------------- #
 
 @pytest.fixture(autouse=True, scope="session")
@@ -85,179 +85,154 @@ def playwright():
     with sync_playwright() as p:
         yield p
 
-@pytest.fixture(scope="session")
+
+@pytest.fixture(scope="function")
 def browser(playwright, request):
-    """Browser instance for the test session with smart headless/headed detection."""
+    """Browser instance for each test."""
+    browser_type = request.config.getoption("--browser", default="chromium")
 
-    # Check if --headed flag is passed
-    is_headed = request.config.getoption("--headed", default=False)
+    # Handle case where browser_type might be a list
+    if isinstance(browser_type, list):
+        browser_type = browser_type[0] if browser_type else "chromium"
 
-    if is_headed:
-        print("🚀 Launching browser in headed mode (--headed flag detected)...")
-        browser = playwright.chromium.launch(
-            headless=False,
-            args=[
-                '--no-sandbox',
-                '--disable-dev-shm-usage',
-                '--disable-web-security'
-            ]
-        )
-        print("✅ Browser launched successfully in headed mode")
+    headless = not request.config.getoption("--headed", default=False)
+
+    if browser_type == "chromium":
+        browser = playwright.chromium.launch(headless=headless)
+    elif browser_type == "firefox":
+        browser = playwright.firefox.launch(headless=headless)
+    elif browser_type == "webkit":
+        browser = playwright.webkit.launch(headless=headless)
     else:
-        print("🚀 Launching browser in headless mode for better performance...")
-        try:
-            browser = playwright.chromium.launch(
-                headless=True,
-                args=[
-                    '--no-sandbox',
-                    '--disable-dev-shm-usage',
-                    '--disable-gpu',
-                    '--disable-web-security',
-                    '--disable-features=VizDisplayCompositor',
-                    '--disable-extensions',
-                    '--disable-plugins',
-                    '--disable-images',
-                    '--no-first-run',
-                    '--no-default-browser-check',
-                    '--disable-background-timer-throttling',
-                    '--disable-backgrounding-occluded-windows',
-                    '--disable-renderer-backgrounding',
-                    '--disable-blink-features=AutomationControlled',
-                    '--disable-features=TranslateUI',
-                    '--disable-ipc-flooding-protection'
-                ]
-            )
-            print("✅ Browser launched successfully in headless mode")
-        except Exception as e:
-            print(f"⚠️ Headless mode failed: {e}")
-            print("🔄 Falling back to headed mode...")
-            browser = playwright.chromium.launch(
-                headless=False,
-                args=[
-                    '--no-sandbox',
-                    '--disable-dev-shm-usage',
-                    '--disable-web-security'
-                ]
-            )
-            print("✅ Browser launched successfully in headed mode")
+        raise ValueError(f"Unsupported browser: {browser_type}")
 
     yield browser
     browser.close()
 
+
 @pytest.fixture(scope="function")
-def page(playwright):
-    browser = playwright.chromium.launch(headless=False)
-    context = browser.new_context()
-    context.add_init_script("localStorage.clear(); sessionStorage.clear();")
-    page = context.new_page()
+def page(browser):
+    """Page instance for each test."""
+    page = browser.new_page()
     yield page
-    context.close()
-    browser.close()
-
-# ------------------- Base URL Fixture ------------------- #
-
-@pytest.fixture(scope="session")
-def base_url():
-    """Return the application's base URL."""
-    return BASE_URL
+    page.close()
 
 
 # ------------------- Page Object Fixtures ------------------- #
 
-@pytest.fixture
-def add_height_weight(page):
-    """Return an instance of the AddHeightAndWeight page."""
-    return AddHeightAndWeight(page)
+@pytest.fixture(scope="function")
+def home_page(page):
+    """Home page fixture."""
+    return HomePage(page)
 
-@pytest.fixture
+
+@pytest.fixture(scope="function")
+def height_weight_page(page):
+    """Height and weight page fixture."""
+    return HeightWeightPage(page)
+
+
+@pytest.fixture(scope="function")
 def goal_weight(page):
-    """Return an instance of the GoalWeight page."""
+    """Goal weight page fixture."""
     return GoalWeightPage(page)
 
-@pytest.fixture
+
+@pytest.fixture(scope="function")
 def gender_and_age(page):
-    """Fixture returning an instance of the GenderAndAgePage."""
+    """Gender and age page fixture."""
     return GenderAndAgePage(page)
 
-@pytest.fixture
+
+@pytest.fixture(scope="function")
 def experience_illness(page):
-    """Fixture returning an instance of the ExperienceIllnessPage."""
+    """Experience illness page fixture."""
     return ExperienceIllnessPage(page)
 
-@pytest.fixture
+
+@pytest.fixture(scope="function")
 def priority(page):
-    """Fixture returning an instance of the PriorityPage."""
+    """Priority page fixture."""
     return PriorityPage(page)
 
-@pytest.fixture
+
+@pytest.fixture(scope="function")
 def rank(page):
-    """Fixture returning an instance of the RankPage."""
+    """Rank page fixture."""
     return RankPage(page)
 
-@pytest.fixture
+
+@pytest.fixture(scope="function")
 def metabolic_graph(page):
-    """Fixture returning an instance of the MetabolicGraphPage."""
+    """Metabolic graph page fixture."""
     return MetabolicGraphPage(page)
 
-@pytest.fixture
+
+@pytest.fixture(scope="function")
+def gpl(page):
+    """GLP-1 page fixture."""
+    return GLP1Page(page)
+
+
+@pytest.fixture(scope="function")
 def frank_new_man(page):
-    """Fixture returning an instance of the FrankNewManPage."""
+    """Frank new man page fixture."""
     return FrankNewManPage(page)
 
-@pytest.fixture
-def gpl(page):
-    """Fixture returning an instance of the GPL1Page."""
-    return GPL1Page(page)
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def reasons(page):
-    """Fixture returning an instance of the ReasonsPage."""
+    """Reasons page fixture."""
     return ReasonsPage(page)
 
-@pytest.fixture
+
+@pytest.fixture(scope="function")
 def lose_weight(page):
-    """Fixture returning an instance of the LoseWeightPage."""
+    """Lose weight page fixture."""
     return LoseWeightPage(page)
 
-@pytest.fixture
+
+@pytest.fixture(scope="function")
 def analyze_metabolism(page):
-    """Fixture returning an instance of the AnalyzeMetabolismPage."""
+    """Analyze metabolism page fixture."""
     return AnalyzeMetabolismPage(page)
 
-@pytest.fixture
+
+@pytest.fixture(scope="function")
 def sleep_check(page):
-    """Fixture returning an instance of the SleepCheckPage."""
+    """Sleep check page fixture."""
     return SleepCheckPage(page)
 
-@pytest.fixture
+
+@pytest.fixture(scope="function")
 def sleep_hours(page):
-    """Fixture returning an instance of the SleepHoursPage."""
+    """Sleep hours page fixture."""
     return SleepHoursPage(page)
 
-@pytest.fixture
+
+@pytest.fixture(scope="function")
 def body_review(page):
-    """Fixture returning an instance of the BodyReviewPage."""
+    """Body review page fixture."""
     return BodyReviewPage(page)
 
-@pytest.fixture
+
+@pytest.fixture(scope="function")
 def health_conditions(page):
-    """Fixture returning an instance of the HealthConditionsPage."""
+    """Health conditions page fixture."""
     return HealthConditionsPage(page)
 
-@pytest.fixture
+
+@pytest.fixture(scope="function")
 def additional_health_questions(page):
-    """Fixture returning an instance of the AdditionalHealthQuestionsPage."""
+    """Additional health questions page fixture."""
     return AdditionalHealthQuestionsPage(page)
 
-# ------------------- Data Fixture (Dynamic) ------------------- #
 
-@pytest.fixture
+# ------------------- Test Data Fixtures ------------------- #
+
+@pytest.fixture(scope="function")
 def user_data():
-    """
-    Generate realistic, random user data for each run.
-    This keeps every test execution unique.
-    """
-    logger = logging.getLogger("user_data")
+    """Generate random test data for the MEDVi qualification flow."""
 
     # Height / Weight
     feet = str(rnd.choice(range(4, 7)))          # 4–6 ft
@@ -298,19 +273,14 @@ def user_data():
         "sleep_hours": sleep_hours,
     }
 
-    logger.info(f"🧮 Generated Test Data → {data}")
-
-    # Save (append) to CSV file
-    os.makedirs("logs", exist_ok=True)
-    csv_file = f"logs/random_data_log_{datetime.now().strftime('%Y-%m-%d')}.csv"
-    file_exists = os.path.isfile(csv_file)
-
-    with open(csv_file, mode="a", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=data.keys())
-        if not file_exists:
-            writer.writeheader()  # only once
-        writer.writerow(data)
+    # Log the generated data
+    print("🎲 Generated test data:")
+    for key, value in data.items():
+        print(f"   {key}: {value}")
 
     return data
 
 
+# ------------------- Command Line Options ------------------- #
+
+# Note: Using pytest-playwright's built-in --browser and --headed options
