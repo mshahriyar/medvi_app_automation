@@ -1,4 +1,5 @@
 from playwright.sync_api import Page, expect
+import logging
 
 
 class SleepHoursPage:
@@ -8,6 +9,7 @@ class SleepHoursPage:
 
     def __init__(self, page: Page):
         self.page = page
+        self.log = logging.getLogger("SleepHoursPage")
         self.frame = self.page.frame_locator(self.IFRAME_SELECTOR)
 
         # Image
@@ -28,14 +30,14 @@ class SleepHoursPage:
 
     def verify_sleep_heading_and_image(self):
         """Verify that the question text and image are visible."""
-        print("🔍 Verifying sleep heading and image...")
+        self.log.info("🔍 Verifying sleep heading and image...")
         expect(self.sleep_heading).to_be_visible(timeout=10000)
         expect(self.sleep_image).to_be_visible(timeout=10000)
-        print("✅ Sleep heading and image verified")
+        self.log.info("✅ Sleep heading and image verified")
 
     def select_sleep_hours(self, sleep_hours: str):
         """Select a sleep hours option dynamically."""
-        print(f"😴 Selecting sleep hours option: {sleep_hours}")
+        self.log.info(f"😴 Selecting sleep hours option: {sleep_hours}")
 
         locator_str = self.choose_sleep_hours_option.format(sleep_hours=sleep_hours)
         sleep_option = self.frame.locator(locator_str)
@@ -44,10 +46,10 @@ class SleepHoursPage:
         sleep_option.scroll_into_view_if_needed()
         sleep_option.click()
         expect(sleep_option).to_be_visible(timeout=5000)
-        print(f"✅ Selected sleep hours option: {sleep_hours}")
+        self.log.info(f"✅ Selected sleep hours option: {sleep_hours}")
 
     def hit_next_button(self):
         """Click the 'Next' button."""
         self.next_button.wait_for(state="visible", timeout=10000)
         self.next_button.click()
-        print("➡️ Clicked 'Next' button")
+        self.log.info("➡️ Clicked 'Next' button")

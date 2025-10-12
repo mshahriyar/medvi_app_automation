@@ -1,4 +1,5 @@
 from playwright.sync_api import Page, expect
+import logging
 
 
 class HealthConditionsPage:
@@ -8,6 +9,7 @@ class HealthConditionsPage:
 
     def __init__(self, page: Page):
         self.page = page
+        self.log = logging.getLogger("HealthConditionsPage")
         self.frame = self.page.frame_locator(self.IFRAME_SELECTOR)
 
         self.confidential_disclaimer = self.frame.locator(
@@ -31,19 +33,19 @@ class HealthConditionsPage:
 
     def verify_health_conditions_content(self):
         """Verify static texts on the Health Conditions page."""
-        print("🔍 Verifying health conditions content...")
+        self.log.info("🔍 Verifying health conditions content...")
         expect(self.confidential_disclaimer).to_be_visible(timeout=10000)
         expect(self.apply_to_you_text).to_be_visible(timeout=10000)
-        print("✅ Health conditions content verified")
+        self.log.info("✅ Health conditions content verified")
 
     def verify_and_select_conditions(self, selections: list[str]):
         """Verify visibility of all condition options, then select the given ones."""
-        print("🔍 Verifying and selecting health conditions...")
+        self.log.info("🔍 Verifying and selecting health conditions...")
 
         # Select specified options
         for selection in selections:
             if selection not in self.conditions:
-                print(f"⚠️ Invalid condition '{selection}' (skipped)")
+                self.log.warning(f"⚠️ Invalid condition '{selection}' (skipped)")
                 continue
 
             quote = '"' if "'" in selection else "'"
@@ -53,12 +55,12 @@ class HealthConditionsPage:
                 locator.wait_for(state="visible", timeout=8000)
                 locator.scroll_into_view_if_needed()
                 locator.click()
-                print(f"✅ Selected: {selection}")
+                self.log.info(f"✅ Selected: {selection}")
             except Exception as e:
-                print(f"❌ Failed to select '{selection}': {e}")
+                self.log.error(f"❌ Failed to select '{selection}': {e}")
 
     def hit_next_button(self):
         """Click the 'Next' button."""
         self.next_button.wait_for(state="visible", timeout=10000)
         self.next_button.click()
-        print("➡️ Clicked 'Next' button")
+        self.log.info("➡️ Clicked 'Next' button")

@@ -1,4 +1,5 @@
 from playwright.sync_api import Page, expect
+import logging
 
 
 class HeightWeightPage:
@@ -8,6 +9,7 @@ class HeightWeightPage:
 
     def __init__(self, page: Page):
         self.page = page
+        self.log = logging.getLogger("HeightWeightPage")
         self.frame = self.page.frame_locator(self.IFRAME_SELECTOR)
 
         # Form elements
@@ -18,7 +20,7 @@ class HeightWeightPage:
 
     def wait_for_iframe_ready(self, max_retries: int = 5):
         """Wait for the Typeform iframe to load."""
-        print("🔄 Waiting for iframe to load...")
+        self.log.info("🔄 Waiting for iframe to load...")
 
         for attempt in range(1, max_retries + 1):
             try:
@@ -28,11 +30,11 @@ class HeightWeightPage:
 
                 # Wait for form elements to be visible
                 self.feet_dropdown.wait_for(state="visible", timeout=10000)
-                print("✅ Iframe loaded and form visible!")
+                self.log.info("✅ Iframe loaded and form visible!")
                 return
 
             except Exception as e:
-                print(f"⚠️ Iframe not ready (Attempt {attempt}): {e}")
+                self.log.info(f"⚠️ Iframe not ready (Attempt {attempt}): {e}")
                 if attempt < max_retries:
                     self.page.wait_for_timeout(2000)
                 else:
@@ -40,32 +42,32 @@ class HeightWeightPage:
 
     def select_feet(self, value: str):
         """Select feet from dropdown."""
-        print(f"🦶 Selecting feet: {value}")
+        self.log.info(f"🦶 Selecting feet: {value}")
         self.feet_dropdown.wait_for(state="visible", timeout=10000)
         self.feet_dropdown.click()
         self.feet_dropdown.fill(value)
         self.page.keyboard.press("Enter")
-        print(f"✅ Selected feet: {value}")
+        self.log.info(f"✅ Selected feet: {value}")
 
     def select_inches(self, value: str):
         """Select inches from dropdown."""
-        print(f"📏 Selecting inches: {value}")
+        self.log.info(f"📏 Selecting inches: {value}")
         self.inches_dropdown.wait_for(state="visible", timeout=10000)
         self.inches_dropdown.click()
         self.inches_dropdown.fill(value)
         self.page.keyboard.press("Enter")
-        print(f"✅ Selected inches: {value}")
+        self.log.info(f"✅ Selected inches: {value}")
 
     def add_weight(self, weight: str):
         """Enter weight value."""
-        print(f"⚖️ Entering weight: {weight}")
+        self.log.info(f"⚖️ Entering weight: {weight}")
         self.weight_input.wait_for(state="visible", timeout=10000)
         self.weight_input.fill(weight)
         expect(self.weight_input).to_have_value(weight)
-        print("✅ Weight entered successfully")
+        self.log.info("✅ Weight entered successfully")
 
     def hit_next_button(self):
         """Click the 'Next' button."""
         self.next_button.wait_for(state="visible", timeout=10000)
         self.next_button.click()
-        print("➡️ Clicked 'Next' button")
+        self.log.info("➡️ Clicked 'Next' button")

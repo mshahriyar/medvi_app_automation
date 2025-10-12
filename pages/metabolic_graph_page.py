@@ -1,4 +1,5 @@
 from playwright.sync_api import Page, expect
+import logging
 
 
 class MetabolicGraphPage:
@@ -8,18 +9,19 @@ class MetabolicGraphPage:
 
     def __init__(self, page: Page):
         self.page = page
+        self.log = logging.getLogger("MetabolicGraphPage")
         self.frame = self.page.frame_locator(self.IFRAME_SELECTOR)
         self.next_button = self.frame.locator("//button[@data-cy='button-component']")
 
     def verify_graph(self):
         """Verify the metabolic graph is visible."""
-        print("🔍 Verifying metabolic graph...")
+        self.log.info("🔍 Verifying metabolic graph...")
         graph_img = self.frame.locator("img[src*='withmedvi.png']")
         expect(graph_img).to_be_visible(timeout=10000)
-        print("✅ Graph verified")
+        self.log.info("✅ Graph verified")
 
     def hit_next_button(self):
         """Click the 'Next' button."""
         self.next_button.wait_for(state="visible", timeout=10000)
         self.next_button.click()
-        print("➡️ Clicked 'Next' button")
+        self.log.info("➡️ Clicked 'Next' button")

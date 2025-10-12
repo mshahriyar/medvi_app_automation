@@ -1,4 +1,5 @@
 from playwright.sync_api import Page, expect
+import logging
 
 
 class AdditionalHealthQuestionsPage:
@@ -8,6 +9,7 @@ class AdditionalHealthQuestionsPage:
 
     def __init__(self, page: Page):
         self.page = page
+        self.log = logging.getLogger("AdditionalHealthQuestionsPage")
         self.frame = self.page.frame_locator(self.IFRAME_SELECTOR)
 
         self.main_heading = self.frame.locator(
@@ -59,30 +61,30 @@ class AdditionalHealthQuestionsPage:
 
     def verify_page_headings(self):
         """Verify both main and sub headings are visible."""
-        print("🔍 Verifying page headings...")
+        self.log.info("🔍 Verifying page headings...")
         expect(self.main_heading).to_be_visible(timeout=10000)
         expect(self.sub_heading).to_be_visible(timeout=10000)
-        print("✅ Page headings verified")
+        self.log.info("✅ Page headings verified")
 
     def verify_all_conditions_visible(self):
         """Verify all condition options are visible."""
-        print("🔍 Verifying all conditions are visible...")
+        self.log.info("🔍 Verifying all conditions are visible...")
         for condition in self.conditions:
             quote = '"' if "'" in condition else "'"
             locator = self.frame.locator(f"//div[normalize-space(text())={quote}{condition}{quote}]")
             try:
                 expect(locator).to_be_visible(timeout=7000)
             except:
-                print(f"⚠️ Condition not visible: {condition}")
-        print("✅ Conditions visibility check completed")
+                self.log.warning(f"⚠️ Condition not visible: {condition}")
+        self.log.info("✅ Conditions visibility check completed")
 
     def select_conditions(self, selections: list[str]):
         """Select specific conditions dynamically."""
-        print("🩺 Selecting health conditions...")
+        self.log.info("🩺 Selecting health conditions...")
 
         for selection in selections:
             if selection not in self.conditions:
-                print(f"⚠️ Invalid condition '{selection}' (skipped)")
+                self.log.warning(f"⚠️ Invalid condition '{selection}' (skipped)")
                 continue
 
             quote = '"' if "'" in selection else "'"
@@ -93,12 +95,12 @@ class AdditionalHealthQuestionsPage:
                 locator.scroll_into_view_if_needed()
                 locator.click()
                 expect(locator).to_be_visible(timeout=5000)
-                print(f"✅ Selected: {selection}")
+                self.log.info(f"✅ Selected: {selection}")
             except Exception as e:
-                print(f"❌ Failed to select '{selection}': {e}")
+                self.log.error(f"❌ Failed to select '{selection}': {e}")
 
     def hit_next_button(self):
         """Click the 'Next' button."""
         self.next_button.wait_for(state="visible", timeout=10000)
         self.next_button.click()
-        print("➡️ Clicked 'Next' button")
+        self.log.info("➡️ Clicked 'Next' button")

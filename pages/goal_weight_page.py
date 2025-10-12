@@ -1,4 +1,5 @@
 from playwright.sync_api import Page, expect
+import logging
 
 
 class GoalWeightPage:
@@ -8,6 +9,7 @@ class GoalWeightPage:
 
     def __init__(self, page: Page):
         self.page = page
+        self.log = logging.getLogger("GoalWeightPage")
         self.frame = self.page.frame_locator(self.IFRAME_SELECTOR)
 
         # Form elements
@@ -20,23 +22,23 @@ class GoalWeightPage:
 
     def add_goal_weight(self, goal_weight: str):
         """Enter goal weight (lbs) into the input field."""
-        print(f"⚖️ Entering goal weight: {goal_weight}")
+        self.log.info(f"⚖️ Entering goal weight: {goal_weight}")
         self.goal_weight_input.wait_for(state="visible", timeout=10000)
         self.goal_weight_input.fill(goal_weight)
         expect(self.goal_weight_input).to_have_value(goal_weight, timeout=5000)
-        print("✅ Goal weight entered successfully")
+        self.log.info("✅ Goal weight entered successfully")
 
     def verify_together_text(self):
         """Ensure motivational text appears."""
-        print("🔍 Verifying together text...")
+        self.log.info("🔍 Verifying together text...")
         try:
             expect(self.together_text).to_be_visible(timeout=5000)
-            print("✅ Together text visible")
+            self.log.info("✅ Together text visible")
         except:
-            print("⚠️ Together text not found")
+            self.log.warning("⚠️ Together text not found")
 
     def hit_next_button(self):
         """Click the 'Next' button."""
         self.next_button.wait_for(state="visible", timeout=10000)
         self.next_button.click()
-        print("➡️ Clicked 'Next' button")
+        self.log.info("➡️ Clicked 'Next' button")

@@ -1,4 +1,5 @@
 from playwright.sync_api import Page, expect
+import logging
 
 
 class GenderAndAgePage:
@@ -8,6 +9,7 @@ class GenderAndAgePage:
 
     def __init__(self, page: Page):
         self.page = page
+        self.log = logging.getLogger("GenderAndAgePage")
         self.frame = self.page.frame_locator(self.IFRAME_SELECTOR)
 
         # Form elements
@@ -17,15 +19,15 @@ class GenderAndAgePage:
 
     def select_gender(self, gender: str):
         """Select Male or Female dynamically."""
-        print(f"👤 Selecting gender: {gender}")
+        self.log.info(f"👤 Selecting gender: {gender}")
         gender_locator = self.frame.locator(self.gender_option.format(gender=gender))
         gender_locator.wait_for(state="visible", timeout=10000)
         gender_locator.click()
-        print(f"✅ Selected gender: {gender}")
+        self.log.info(f"✅ Selected gender: {gender}")
 
     def select_age(self, age: str):
         """Select the user's age range from dropdown."""
-        print(f"🎂 Selecting age range: {age}")
+        self.log.info(f"🎂 Selecting age range: {age}")
         self.age_dropdown.wait_for(state="visible", timeout=10000)
         self.age_dropdown.click()
         self.page.wait_for_timeout(500)
@@ -45,13 +47,13 @@ class GenderAndAgePage:
 
         if age_option:
             age_option.click()
-            print(f"✅ Selected age range: {age}")
+            self.log.info(f"✅ Selected age range: {age}")
         else:
-            print(f"❌ Could not find age option: {age}")
+            self.log.error(f"❌ Could not find age option: {age}")
             raise Exception(f"Age option '{age}' not found in dropdown")
 
     def hit_next_button(self):
         """Click the 'Next' button to proceed."""
         self.next_button.wait_for(state="visible", timeout=10000)
         self.next_button.click()
-        print("➡️ Clicked 'Next' button")
+        self.log.info("➡️ Clicked 'Next' button")

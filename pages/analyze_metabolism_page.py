@@ -1,4 +1,5 @@
 from playwright.sync_api import Page, expect
+import logging
 
 
 class AnalyzeMetabolismPage:
@@ -8,6 +9,7 @@ class AnalyzeMetabolismPage:
 
     def __init__(self, page: Page):
         self.page = page
+        self.log = logging.getLogger("AnalyzeMetabolismPage")
         self.frame = self.page.frame_locator(self.IFRAME_SELECTOR)
         self.analyze_metabolism_text = self.frame.locator(
             "//p[contains(normalize-space(.), 'analyze your metabolism')]"
@@ -16,12 +18,12 @@ class AnalyzeMetabolismPage:
 
     def verify_analyze_metabolism_content(self):
         """Verify that the analyze metabolism text is visible."""
-        print("🔍 Verifying analyze metabolism content...")
+        self.log.info("🔍 Verifying analyze metabolism content...")
         expect(self.analyze_metabolism_text).to_be_visible(timeout=10000)
-        print("✅ Analyze metabolism content verified")
+        self.log.info("✅ Analyze metabolism content verified")
 
     def hit_next_button(self):
         """Click the 'Next' button."""
         self.next_button.wait_for(state="visible", timeout=10000)
         self.next_button.click()
-        print("➡️ Clicked 'Next' button")
+        self.log.info("➡️ Clicked 'Next' button")

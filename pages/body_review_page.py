@@ -1,4 +1,5 @@
 from playwright.sync_api import Page, expect
+import logging
 
 
 class BodyReviewPage:
@@ -8,6 +9,7 @@ class BodyReviewPage:
 
     def __init__(self, page: Page):
         self.page = page
+        self.log = logging.getLogger("BodyReviewPage")
         self.frame = self.page.frame_locator(self.IFRAME_SELECTOR)
 
         self.body_review_heading = self.frame.locator(
@@ -18,13 +20,13 @@ class BodyReviewPage:
 
     def verify_body_review_content(self):
         """Verify that the heading and image are visible on the Body Review page."""
-        print("🔍 Verifying body review content...")
+        self.log.info("🔍 Verifying body review content...")
         expect(self.body_review_heading).to_be_visible(timeout=10000)
         expect(self.body_review_image).to_be_visible(timeout=10000)
-        print("✅ Body review content verified")
+        self.log.info("✅ Body review content verified")
 
     def hit_next_button(self):
         """Click the 'Next' button."""
         self.next_button.wait_for(state="visible", timeout=10000)
         self.next_button.click()
-        print("➡️ Clicked 'Next' button")
+        self.log.info("➡️ Clicked 'Next' button")

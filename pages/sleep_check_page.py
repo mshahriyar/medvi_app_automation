@@ -1,4 +1,5 @@
 from playwright.sync_api import Page, expect
+import logging
 
 
 class SleepCheckPage:
@@ -8,6 +9,7 @@ class SleepCheckPage:
 
     def __init__(self, page: Page):
         self.page = page
+        self.log = logging.getLogger("SleepCheckPage")
         self.frame = self.page.frame_locator(self.IFRAME_SELECTOR)
         self.next_button = self.frame.locator("//button[@data-cy='button-component']")
         self.sleep_routine_heading = self.frame.locator(
@@ -17,13 +19,13 @@ class SleepCheckPage:
 
     def verify_sleep_routine_heading_visible(self):
         """Verify that the sleep routine heading is visible."""
-        print("🔍 Verifying sleep routine heading...")
+        self.log.info("🔍 Verifying sleep routine heading...")
         expect(self.sleep_routine_heading).to_be_visible(timeout=10000)
-        print("✅ Sleep routine heading visible")
+        self.log.info("✅ Sleep routine heading visible")
 
     def select_sleep_routine(self, sleep_value: str):
         """Select a sleep routine option (handles quotes safely)."""
-        print(f"😴 Selecting sleep routine: {sleep_value}")
+        self.log.info(f"😴 Selecting sleep routine: {sleep_value}")
 
         # Handle apostrophes correctly
         quote = '"' if "'" in sleep_value else "'"
@@ -34,10 +36,10 @@ class SleepCheckPage:
         sleep_option.scroll_into_view_if_needed()
         sleep_option.click()
         expect(sleep_option).to_be_visible(timeout=5000)
-        print(f"✅ Selected sleep routine: {sleep_value}")
+        self.log.info(f"✅ Selected sleep routine: {sleep_value}")
 
     def hit_next_button(self):
         """Click the 'Next' button."""
         self.next_button.wait_for(state="visible", timeout=10000)
         self.next_button.click()
-        print("➡️ Clicked 'Next' button")
+        self.log.info("➡️ Clicked 'Next' button")

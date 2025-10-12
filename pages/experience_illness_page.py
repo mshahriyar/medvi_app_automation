@@ -1,4 +1,5 @@
 from playwright.sync_api import Page, expect
+import logging
 
 
 class ExperienceIllnessPage:
@@ -8,6 +9,7 @@ class ExperienceIllnessPage:
 
     def __init__(self, page: Page):
         self.page = page
+        self.log = logging.getLogger("ExperienceIllnessPage")
         self.frame = self.page.frame_locator(self.IFRAME_SELECTOR)
 
         # Dynamic template for illness options
@@ -17,7 +19,7 @@ class ExperienceIllnessPage:
     def select_experience_illness(self, experience_illness_value: str):
         """Selects an illness option dynamically based on provided value."""
         clean_value = experience_illness_value.strip()
-        print(f"🩺 Selecting experience illness: '{clean_value}'")
+        self.log.info(f"🩺 Selecting experience illness: '{clean_value}'")
 
         # Build the locator dynamically
         locator_xpath = self.option_template.format(experience_illness=clean_value)
@@ -29,14 +31,14 @@ class ExperienceIllnessPage:
             option_locator.scroll_into_view_if_needed()
             expect(option_locator).to_be_visible(timeout=5000)
             option_locator.click()
-            print(f"✅ Successfully selected: '{clean_value}'")
+            self.log.info(f"✅ Successfully selected: '{clean_value}'")
 
         except Exception as e:
-            print(f"❌ Failed to select '{clean_value}': {e}")
+            self.log.error(f"❌ Failed to select '{clean_value}': {e}")
             raise
 
     def hit_next_button(self):
         """Click the 'Next' button."""
         self.next_button.wait_for(state="visible", timeout=10000)
         self.next_button.click()
-        print("➡️ Clicked 'Next' button")
+        self.log.info("➡️ Clicked 'Next' button")

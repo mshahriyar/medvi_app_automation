@@ -1,4 +1,5 @@
 from playwright.sync_api import Page, expect
+import logging
 
 
 class GLP1Page:
@@ -8,6 +9,7 @@ class GLP1Page:
 
     def __init__(self, page: Page):
         self.page = page
+        self.log = logging.getLogger("GLP1Page")
         self.frame = self.page.frame_locator(self.IFRAME_SELECTOR)
 
         self.next_button = self.frame.locator("//button[@data-cy='button-component']")
@@ -29,13 +31,13 @@ class GLP1Page:
 
     def wait_for_glp1_graph(self, max_wait: int = 30000):
         """Wait until the GLP-1 graph (image) becomes visible inside the iframe."""
-        print("🔄 Waiting for GLP-1 graph to appear...")
+        self.log.info("🔄 Waiting for GLP-1 graph to appear...")
 
         try:
             expect(self.glp1_image).to_be_visible(timeout=max_wait)
-            print("✅ GLP-1 graph image loaded successfully")
+            self.log.info("✅ GLP-1 graph image loaded successfully")
         except Exception:
-            print("⚠️ GLP-1 graph not visible yet, reloading iframe...")
+            self.log.info("⚠️ GLP-1 graph not visible yet, reloading iframe...")
             try:
                 # Reload the iframe only
                 self.page.evaluate(
@@ -45,13 +47,13 @@ class GLP1Page:
                 self.page.wait_for_timeout(4000)
                 self.frame = self.page.frame_locator(self.IFRAME_SELECTOR)
                 expect(self.glp1_image).to_be_visible(timeout=max_wait)
-                print("✅ GLP-1 graph became visible after iframe reload")
+                self.log.info("✅ GLP-1 graph became visible after iframe reload")
             except Exception as e:
                 raise TimeoutError(f"❌ GLP-1 graph failed to load: {e}")
 
     def verify_glp1_content(self):
         """Verify all GLP-1 related informational texts are visible."""
-        print("🔍 Verifying GLP-1 content...")
+        self.log.info("🔍 Verifying GLP-1 content...")
 
         try:
             expect(self.title_text).to_be_visible(timeout=8000)
@@ -59,12 +61,12 @@ class GLP1Page:
             expect(self.week_4_8_text).to_be_visible(timeout=8000)
             expect(self.week_9_plus_text).to_be_visible(timeout=8000)
             expect(self.fat_burning_text).to_be_visible(timeout=8000)
-            print("✅ All GLP-1 content verified")
+            self.log.info("✅ All GLP-1 content verified")
         except Exception as e:
-            print(f"⚠️ Some GLP-1 content not visible: {e}")
+            self.log.warning(f"⚠️ Some GLP-1 content not visible: {e}")
 
     def hit_next_button(self):
         """Click the 'Next' button."""
         self.next_button.wait_for(state="visible", timeout=10000)
         self.next_button.click()
-        print("➡️ Clicked 'Next' button")
+        self.log.info("➡️ Clicked 'Next' button")
