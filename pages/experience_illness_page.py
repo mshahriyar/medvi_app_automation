@@ -46,3 +46,4 @@ class ExperienceIllnessPage:
         next_button.wait_for(state="visible", timeout=self.DEFAULT_TIMEOUT)
         next_button.click()
         self.log.info("➡️ Clicked 'Next' button")
+

@@ -1,28 +1,28 @@
-[32mINFO    [0m root:conftest.py:42 ✅ Logging configured.
+[32mINFO    [0m root:conftest.py:44 ✅ Logging configured.
 [32mINFO    [0m HomePage:home_page.py:34 🌐 Navigating to: https://medvi.org/
 [32mINFO    [0m HomePage:home_page.py:37 ✅ Home page loaded successfully
 [32mINFO    [0m HomePage:home_page.py:47 ✅ Clicked 'AM I QUALIFIED?' button
 [32mINFO    [0m HeightWeightPage:height_weight_page.py:34 🔄 Waiting for iframe to load...
 [32mINFO    [0m HeightWeightPage:height_weight_page.py:44 ✅ Iframe loaded and form visible!
-[32mINFO    [0m HeightWeightPage:height_weight_page.py:60 ✅ Selected feet: 4
+[32mINFO    [0m HeightWeightPage:height_weight_page.py:60 ✅ Selected feet: 6
 [32mINFO    [0m HeightWeightPage:height_weight_page.py:66 ✅ Selected inches: 2
 [32mINFO    [0m HeightWeightPage:height_weight_page.py:72 ✅ Weight entered successfully
 [32mINFO    [0m HeightWeightPage:height_weight_page.py:78 ➡️ Clicked 'Next' button
-[32mINFO    [0m GoalWeightPage:goal_weight_page.py:26 ⚖️ Entering goal weight: 126
+[32mINFO    [0m GoalWeightPage:goal_weight_page.py:26 ⚖️ Entering goal weight: 177
 [32mINFO    [0m GoalWeightPage:goal_weight_page.py:33 ✅ Goal weight entered successfully
 [32mINFO    [0m GoalWeightPage:goal_weight_page.py:38 🔍 Verifying motivational text...
 [32mINFO    [0m GoalWeightPage:goal_weight_page.py:43 ✅ Motivational text is visible
 [32mINFO    [0m GoalWeightPage:goal_weight_page.py:53 ➡️ Clicked 'Next' button
 [32mINFO    [0m GenderAndAgePage:gender_age_page.py:26 👤 Selecting gender: Male
 [32mINFO    [0m GenderAndAgePage:gender_age_page.py:30 ✅ Selected gender: Male
-[32mINFO    [0m GenderAndAgePage:gender_age_page.py:35 🎂 Selecting age range: 29-39
-[32mINFO    [0m GenderAndAgePage:gender_age_page.py:53 ✅ Selected age range: 29-39
+[32mINFO    [0m GenderAndAgePage:gender_age_page.py:35 🎂 Selecting age range: 18-28
+[32mINFO    [0m GenderAndAgePage:gender_age_page.py:53 ✅ Selected age range: 18-28
 [32mINFO    [0m GenderAndAgePage:gender_age_page.py:68 ➡️ Clicked 'Next' button
-[32mINFO    [0m ExperienceIllnessPage:experience_illness_page.py:27 🩺 Selecting experience illness: 'Skin Issues'
-[32mINFO    [0m ExperienceIllnessPage:experience_illness_page.py:36 ✅ Successfully selected: 'Skin Issues'
+[32mINFO    [0m ExperienceIllnessPage:experience_illness_page.py:27 🩺 Selecting experience illness: 'Cognition Issues'
+[32mINFO    [0m ExperienceIllnessPage:experience_illness_page.py:36 ✅ Successfully selected: 'Cognition Issues'
 [32mINFO    [0m ExperienceIllnessPage:experience_illness_page.py:48 ➡️ Clicked 'Next' button
-[32mINFO    [0m PriorityPage:priority_page.py:26 🎯 Selecting goal: Maintain My Current Body
-[32mINFO    [0m PriorityPage:priority_page.py:33 ✅ Selected goal: Maintain My Current Body
+[32mINFO    [0m PriorityPage:priority_page.py:26 🎯 Selecting goal: Gain Muscle
+[32mINFO    [0m PriorityPage:priority_page.py:33 ✅ Selected goal: Gain Muscle
 [32mINFO    [0m PriorityPage:priority_page.py:41 ➡️ Clicked 'Next' button
 [32mINFO    [0m RankPage:rank_page.py:26 🏆 Verifying Forbes rank image visibility...
 [32mINFO    [0m RankPage:rank_page.py:30 ✅ Rank image verified successfully
@@ -40,11 +40,11 @@
 [32mINFO    [0m GLP1Page:glp1_page.py:79 ➡️ Clicked 'Next' button
 [32mINFO    [0m ReasonsPage:reasons_page.py:26 🔍 Verifying reasons heading...
 [32mINFO    [0m ReasonsPage:reasons_page.py:31 ✅ Reasons heading verified successfully
-[32mINFO    [0m ReasonsPage:reasons_page.py:36 🎯 Selecting reason: I want to feel and look better
-[32mINFO    [0m ReasonsPage:reasons_page.py:42 ✅ Reason selected: I want to feel and look better
+[32mINFO    [0m ReasonsPage:reasons_page.py:36 🎯 Selecting reason: I want to live longer
+[32mINFO    [0m ReasonsPage:reasons_page.py:42 ✅ Reason selected: I want to live longer
 [32mINFO    [0m ReasonsPage:reasons_page.py:51 ➡️ Clicked 'Next' button
-[32mINFO    [0m LoseWeightPage:lose_weight_page.py:38 ⚖️ Selecting lose weight option: That's too fast
-[32mINFO    [0m LoseWeightPage:lose_weight_page.py:49 ✅ Selected lose weight option: That's too fast
+[32mINFO    [0m LoseWeightPage:lose_weight_page.py:38 ⚖️ Selecting lose weight option: I want it faster
+[32mINFO    [0m LoseWeightPage:lose_weight_page.py:49 ✅ Selected lose weight option: I want it faster
 [32mINFO    [0m LoseWeightPage:lose_weight_page.py:69 ➡️ Clicked 'Next' button
 [32mINFO    [0m AnalyzeMetabolismPage:analyze_metabolism_page.py:26 🔍 Verifying analyze metabolism content...
 [32mINFO    [0m AnalyzeMetabolismPage:analyze_metabolism_page.py:33 ✅ Analyze metabolism content verified successfully
@@ -60,8 +60,8 @@
 [32mINFO    [0m SleepHoursPage:sleep_hours_page.py:53 ✅ Selected sleep hours option: 8-9 hours
 [32mINFO    [0m SleepHoursPage:sleep_hours_page.py:62 ➡️ Clicked 'Next' button
 [32mINFO    [0m BodyReviewPage:body_review_page.py:26 🔍 Verifying Body Review content...
-[32mINFO    [0m BodyReviewPage:body_review_page.py:36 ✅ Body Review heading and image verified successfully
-[32mINFO    [0m BodyReviewPage:body_review_page.py:44 ➡️ Clicked 'Next' button
+[32mINFO    [0m BodyReviewPage:body_review_page.py:40 ✅ Body Review heading and image verified successfully
+[32mINFO    [0m BodyReviewPage:body_review_page.py:48 ➡️ Clicked 'Next' button
 [32mINFO    [0m HealthConditionsPage:health_conditions_page.py:27 🔍 Verifying Health Conditions content...
 [32mINFO    [0m HealthConditionsPage:health_conditions_page.py:39 ✅ Health Conditions content verified successfully
 [32mINFO    [0m HealthConditionsPage:health_conditions_page.py:44 🩺 Verifying and selecting health conditions...
@@ -77,3 +77,13 @@
 [32mINFO    [0m AdditionalHealthQuestionsPage:additional_health_questions_page.py:79 ✅ Selected: Hypertension (high blood pressure)
 [32mINFO    [0m AdditionalHealthQuestionsPage:additional_health_questions_page.py:79 ✅ Selected: None of these
 [32mINFO    [0m AdditionalHealthQuestionsPage:additional_health_questions_page.py:90 ➡️ Clicked 'Next' button
+[32mINFO    [0m TakenMedicationPage:taken_medication_page.py:34 💊 Selecting taken medication: 'Yes, I've taken a different medication for weight loss'
+[1m[31mERROR   [0m TakenMedicationPage:taken_medication_page.py:52 ❌ Failed to select 'Yes, I've taken a different medication for weight loss': Locator.wait_for: SyntaxError: Failed to execute 'evaluate' on 'Document': The string '//div[normalize-space(text())='Yes, I've taken a different medication for weight loss']' is not a valid XPath expression.
+    at Object.queryAll (<anonymous>:41:25)
+    at InjectedScript._queryEngineAll (<anonymous>:5163:49)
+    at InjectedScript.querySelectorAll (<anonymous>:5150:30)
+    at eval (eval at evaluate (:234:30), <anonymous>:5:35)
+    at UtilityScript.evaluate (<anonymous>:236:17)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+Call log:
+waiting for locator("iframe[title='1tAZd12DZCus']").content_frame.locator("//div[normalize-space(text())='Yes, I've taken a different medication for weight loss']") to be visible

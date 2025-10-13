@@ -26,10 +26,14 @@ class BodyReviewPage:
         self.log.info("🔍 Verifying Body Review content...")
 
         heading = self.frame.locator(
-            "//span[contains(normalize-space(.), 'Thank you for the metabolic reset - game changer')]"
+            "//h2[contains(@class, 'ql-align-center')]"
         )
+        text_content = self.frame.locator(
+            "//p[contains(@class, 'ql-align-center')]"
+        )      
         image = self.frame.locator("img[src*='/13.png']")
 
+        expect(text_content).to_be_visible(timeout=self.DEFAULT_TIMEOUT)
         expect(heading).to_be_visible(timeout=self.DEFAULT_TIMEOUT)
         expect(image).to_be_visible(timeout=self.DEFAULT_TIMEOUT)
 

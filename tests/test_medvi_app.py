@@ -28,6 +28,7 @@ def test_am_i_qualified(
     body_review,
     health_conditions,
     additional_health_questions,
+    taken_medication,
     user_data,
 ):
 
@@ -125,6 +126,10 @@ def test_am_i_qualified(
             "None of these"
         ])
         additional_health_questions.hit_next_button()
+
+    with allure.step("Step 19: Select taken medication"):
+        taken_medication.select_taken_medication(user_data["taken_medication"])
+        taken_medication.hit_next_button()
 
     allure.attach(
         datetime.now().strftime("%Y-%m-%d %H:%M:%S"),

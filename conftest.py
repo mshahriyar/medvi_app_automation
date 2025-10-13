@@ -23,7 +23,9 @@ from pages.sleep_hours_page import SleepHoursPage
 from pages.body_review_page import BodyReviewPage
 from pages.health_conditions_page import HealthConditionsPage
 from pages.additional_health_questions_page import AdditionalHealthQuestionsPage
+from pages.taken_medication_page import TakenMedicationPage
 import csv
+
 
 # --------------------- Logging Configuration --------------------- #
 
@@ -228,6 +230,12 @@ def additional_health_questions(page):
     return AdditionalHealthQuestionsPage(page)
 
 
+@pytest.fixture(scope="function")
+def taken_medication(page):
+    """Taken medication page fixture."""
+    return TakenMedicationPage(page)
+
+
 # ------------------- Test Data Fixtures ------------------- #
 
 @pytest.fixture(scope="function")
@@ -255,7 +263,8 @@ def user_data():
     lose_weight_goal = rnd.choice(["That works for me", "I want it faster", "That's too fast"])
     sleep_routine = rnd.choice(["Pretty Good", "A bit restless", "I don't sleep well"])
     sleep_hours = rnd.choice(["Less than 5 hours", "6-7 hours", "8-9 hours", "More than 9 hours"])
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")    
+    taken_medication = rnd.choice(["Yes, I've taken GLP-1 medication", "Yes, I've taken a different medication for weight loss", "No"])
 
     data = {
         "timestamp": timestamp,
@@ -271,6 +280,7 @@ def user_data():
         "lose_weight": lose_weight_goal,
         "sleep": sleep_routine,
         "sleep_hours": sleep_hours,
+        "taken_medication": str(taken_medication),
     }
 
     # Log the generated data
