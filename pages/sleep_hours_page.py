@@ -37,12 +37,25 @@ class SleepHoursPage:
 
         self.log.info("✅ Sleep heading and image verified")
 
+    def escape_xpath_text(self, text: str) -> str:
+            """
+            Safely escape text for XPath — handles both single and double quotes.
+            Example: "Yes, I've taken" → concat('Yes, I', "'", 've taken')
+            """
+            if "'" not in text:
+                return f"'{text}'"
+            if '"' not in text:
+                return f'"{text}"'
+            parts = text.split("'")
+            return "concat(" + ", \"'\", ".join(f"'{part}'" for part in parts) + ")"
+
     @allure.step("Select sleep hours option")
     def select_sleep_hours(self, sleep_hours: str):
         """Select a sleep hours option dynamically."""
         self.log.info(f"😴 Selecting sleep hours option: {sleep_hours}")
 
-        locator_str = f"//div[normalize-space(text())='{sleep_hours}']"
+        safe_value = self.escape_xpath_text(sleep_hours)
+        locator_str = f"//div[normalize-space(text())={safe_value}]"
         sleep_option = self.frame.locator(locator_str)
 
         sleep_option.wait_for(state="visible", timeout=self.DEFAULT_TIMEOUT)

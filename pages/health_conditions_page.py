@@ -37,6 +37,17 @@ class HealthConditionsPage:
         expect(question_text).to_be_visible(timeout=self.DEFAULT_TIMEOUT)
 
         self.log.info("✅ Health Conditions content verified successfully")
+    def escape_xpath_text(self, text: str) -> str:
+        """
+        Safely escape text for XPath — handles both single and double quotes.
+        Example: "Yes, I've taken" → concat('Yes, I', "'", 've taken')
+        """
+        if "'" not in text:
+            return f"'{text}'"
+        if '"' not in text:
+            return f'"{text}"'
+        parts = text.split("'")
+        return "concat(" + ", \"'\", ".join(f"'{part}'" for part in parts) + ")"
 
     @allure.step("Verify and select health condition options")
     def verify_and_select_conditions(self, selections: List[str]):
@@ -58,9 +69,9 @@ class HealthConditionsPage:
                 self.log.warning(f"⚠️ Invalid condition '{selection}' (skipped)")
                 continue
 
-            quote = '"' if "'" in selection else "'"
+            safe_value = self.escape_xpath_text(selection)
             locator = self.frame.locator(
-                f"//div[normalize-space(text())={quote}{selection}{quote}]"
+                f"//div[normalize-space(text())={safe_value}]"
             )
 
             try:

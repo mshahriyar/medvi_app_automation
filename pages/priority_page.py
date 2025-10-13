@@ -12,20 +12,33 @@ class PriorityPage:
     def __init__(self, page: Page):
         self.page = page
         self.log = logging.getLogger("PriorityPage")
+    
+    def escape_xpath_text(self, text: str) -> str:
+        """
+        Safely escape text for XPath — handles both single and double quotes.
+        Example: "Yes, I've taken" → concat('Yes, I', "'", 've taken')
+        """
+        if "'" not in text:
+            return f"'{text}'"
+        if '"' not in text:
+            return f'"{text}"'
+        parts = text.split("'")
+        return "concat(" + ", \"'\", ".join(f"'{part}'" for part in parts) + ")"
 
     @property
     def frame(self):
         """Always return a fresh frame locator to avoid stale reference."""
         return self.page.frame_locator(self.IFRAME_SELECTOR)
 
-    # ---------------------- Actions ---------------------- #
+    # ----------------------   Actions ---------------------- #
 
     @allure.step("Select user goal priority")
     def select_goal(self, goal_value: str):
         """Selects a goal (Lose Weight / Gain Muscle / Maintain)."""
         self.log.info(f"🎯 Selecting goal: {goal_value}")
 
-        goal_option = self.frame.locator(f"//div[normalize-space(text())='{goal_value}']")
+        safe_value = self.escape_xpath_text(goal_value)
+        goal_option = self.frame.locator(f"//div[normalize-space(text())={safe_value}]")
         goal_option.wait_for(state="visible", timeout=self.DEFAULT_TIMEOUT)
         goal_option.click()
 

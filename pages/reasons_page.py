@@ -30,12 +30,25 @@ class ReasonsPage:
 
         self.log.info("✅ Reasons heading verified successfully")
 
+    def escape_xpath_text(self, text: str) -> str:
+        """
+        Safely escape text for XPath — handles both single and double quotes.
+        Example: "Yes, I've taken" → concat('Yes, I', "'", 've taken')
+        """
+        if "'" not in text:
+            return f"'{text}'"
+        if '"' not in text:
+            return f'"{text}"'
+        parts = text.split("'")
+        return "concat(" + ", \"'\", ".join(f"'{part}'" for part in parts) + ")"
+
     @allure.step("Select reason for weight loss")
     def select_reason(self, reason: str):
         """Select a reason for weight loss."""
         self.log.info(f"🎯 Selecting reason: {reason}")
 
-        reason_locator = self.frame.locator(f"//div[normalize-space(text())='{reason}']")
+        safe_value = self.escape_xpath_text(reason)
+        reason_locator = self.frame.locator(f"//div[normalize-space(text())={safe_value}]")
         reason_locator.wait_for(state="visible", timeout=self.DEFAULT_TIMEOUT)
         reason_locator.click()
 

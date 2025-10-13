@@ -39,6 +39,7 @@ class SleepCheckPage:
 
         self.log.info("✅ Sleep routine heading visible")
 
+
     @allure.step("Select sleep routine option")
     def select_sleep_routine(self, sleep_value: str):
         """Select a sleep routine option (handles quotes safely)."""

@@ -19,6 +19,17 @@ class ExperienceIllnessPage:
         return self.page.frame_locator(self.IFRAME_SELECTOR)
 
     # ---------------------- Actions ---------------------- #
+    def escape_xpath_text(self, text: str) -> str:
+        """
+        Safely escape text for XPath — handles both single and double quotes.
+        Example: "Yes, I've taken" → concat('Yes, I', "'", 've taken')
+        """
+        if "'" not in text:
+            return f"'{text}'"
+        if '"' not in text:
+            return f'"{text}"'
+        parts = text.split("'")
+        return "concat(" + ", \"'\", ".join(f"'{part}'" for part in parts) + ")"
 
     @allure.step("Select experience illness option")
     def select_experience_illness(self, experience_illness_value: str):
@@ -26,7 +37,8 @@ class ExperienceIllnessPage:
         clean_value = experience_illness_value.strip()
         self.log.info(f"🩺 Selecting experience illness: '{clean_value}'")
 
-        option_locator = self.frame.locator(f"//div[normalize-space(text())='{clean_value}']")
+        safe_value = self.escape_xpath_text(clean_value)
+        option_locator = self.frame.locator(f"//div[normalize-space(text())={safe_value}]")
 
         try:
             option_locator.wait_for(state="visible", timeout=self.DEFAULT_TIMEOUT)
