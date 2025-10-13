@@ -250,7 +250,7 @@ def user_data():
     gender = rnd.choice(["Male"])
     experience_illness = rnd.choice(["Hair Loss", "Skin Issues", "Cognition Issues", "None of these"])
     priority = rnd.choice(["Lose Weight", "Gain Muscle", "Maintain My Current Body"])
-    age_range = rnd.choice(["18-28", "29-39", "40-50", "51-61", "62+"])
+    age_range = rnd.choice(["18-28", "29-39", "40-50", "51-61"])
     reason_for_weight_loss = rnd.choice(["I want to live longer", "I want to feel and look better", "I want to reduce current health issues", "All of these"])
     lose_weight_goal = rnd.choice(["That works for me", "I want it faster", "That's too fast"])
     sleep_routine = rnd.choice(["Pretty Good", "A bit restless", "I don't sleep well"])

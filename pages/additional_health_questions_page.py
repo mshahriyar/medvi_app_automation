@@ -1,27 +1,99 @@
 from playwright.sync_api import Page, expect
 import logging
+import allure
+from typing import List
 
 
 class AdditionalHealthQuestionsPage:
     """Handles the 'Additional Health Questions' step in the MEDVi Typeform flow."""
 
     IFRAME_SELECTOR = "iframe[title='1tAZd12DZCus']"
+    DEFAULT_TIMEOUT = 10000
 
     def __init__(self, page: Page):
         self.page = page
         self.log = logging.getLogger("AdditionalHealthQuestionsPage")
-        self.frame = self.page.frame_locator(self.IFRAME_SELECTOR)
 
-        self.main_heading = self.frame.locator(
-            "//span[normalize-space(text())='A few more health questions']"
-        )
-        self.sub_heading = self.frame.locator(
-            "//span[normalize-space(text())='Do any of these apply to you?']"
-        )
-        self.next_button = self.frame.locator("//button[@data-cy='button-component']")
+    @property
+    def frame(self):
+        """Always return a fresh frame locator to avoid stale references."""
+        return self.page.frame_locator(self.IFRAME_SELECTOR)
 
-        # All available condition options
-        self.conditions = [
+    # ---------------------- Actions ---------------------- #
+
+    @allure.step("Verify main and sub headings are visible on Additional Health Questions page")
+    def verify_page_headings(self):
+        """Verify both main and sub headings are visible."""
+        self.log.info("🔍 Verifying page headings...")
+
+        main_heading = self.frame.locator("//span[normalize-space(text())='A few more health questions']")
+        sub_heading = self.frame.locator("//span[normalize-space(text())='Do any of these apply to you?']")
+
+        expect(main_heading).to_be_visible(timeout=self.DEFAULT_TIMEOUT)
+        expect(sub_heading).to_be_visible(timeout=self.DEFAULT_TIMEOUT)
+
+        self.log.info("✅ Page headings verified successfully")
+
+    @allure.step("Verify all additional health conditions are visible")
+    def verify_all_conditions_visible(self):
+        """Verify all condition options are visible."""
+        self.log.info("🔍 Verifying all conditions are visible...")
+
+        conditions = self._get_conditions_list()
+        missing_conditions = []
+
+        for condition in conditions:
+            quote = '"' if "'" in condition else "'"
+            locator = self.frame.locator(f"//div[normalize-space(text())={quote}{condition}{quote}]")
+            try:
+                expect(locator).to_be_visible(timeout=7000)
+            except Exception:
+                missing_conditions.append(condition)
+                self.log.warning(f"⚠️ Condition not visible: {condition}")
+
+        if missing_conditions:
+            self.log.warning(f"⚠️ Missing conditions: {missing_conditions}")
+        else:
+            self.log.info("✅ All conditions are visible")
+
+    @allure.step("Select one or more health conditions")
+    def select_conditions(self, selections: List[str]):
+        """Select specific conditions dynamically."""
+        self.log.info("🩺 Selecting health conditions...")
+
+        conditions = self._get_conditions_list()
+
+        for selection in selections:
+            if selection not in conditions:
+                self.log.warning(f"⚠️ Invalid condition '{selection}' (skipped)")
+                continue
+
+            quote = '"' if "'" in selection else "'"
+            locator = self.frame.locator(f"//div[normalize-space(text())={quote}{selection}{quote}]")
+
+            try:
+                locator.wait_for(state="visible", timeout=self.DEFAULT_TIMEOUT)
+                locator.scroll_into_view_if_needed()
+                locator.click()
+                expect(locator).to_be_visible(timeout=5000)
+                self.log.info(f"✅ Selected: {selection}")
+            except Exception as e:
+                self.log.error(f"❌ Failed to select '{selection}': {e}")
+
+    @allure.step("Click 'Next' button on Additional Health Questions page")
+    def hit_next_button(self):
+        """Click the 'Next' button."""
+        next_button = self.frame.locator("//button[@data-cy='button-component']")
+        next_button.wait_for(state="visible", timeout=self.DEFAULT_TIMEOUT)
+        next_button.click()
+
+        self.log.info("➡️ Clicked 'Next' button")
+
+    # ---------------------- Internal Helpers ---------------------- #
+
+    def _get_conditions_list(self) -> List[str]:
+        """Return the list of all available health condition options."""
+        return [
             "Gallbladder disease",
             "Hypertension (high blood pressure)",
             "Seizures",
@@ -56,51 +128,5 @@ class AdditionalHealthQuestionsPage:
             "Clinically proven low testosterone",
             "Osteoarthritis",
             "Constipation",
-            "None of these"
+            "None of these",
         ]
-
-    def verify_page_headings(self):
-        """Verify both main and sub headings are visible."""
-        self.log.info("🔍 Verifying page headings...")
-        expect(self.main_heading).to_be_visible(timeout=10000)
-        expect(self.sub_heading).to_be_visible(timeout=10000)
-        self.log.info("✅ Page headings verified")
-
-    def verify_all_conditions_visible(self):
-        """Verify all condition options are visible."""
-        self.log.info("🔍 Verifying all conditions are visible...")
-        for condition in self.conditions:
-            quote = '"' if "'" in condition else "'"
-            locator = self.frame.locator(f"//div[normalize-space(text())={quote}{condition}{quote}]")
-            try:
-                expect(locator).to_be_visible(timeout=7000)
-            except:
-                self.log.warning(f"⚠️ Condition not visible: {condition}")
-        self.log.info("✅ Conditions visibility check completed")
-
-    def select_conditions(self, selections: list[str]):
-        """Select specific conditions dynamically."""
-        self.log.info("🩺 Selecting health conditions...")
-
-        for selection in selections:
-            if selection not in self.conditions:
-                self.log.warning(f"⚠️ Invalid condition '{selection}' (skipped)")
-                continue
-
-            quote = '"' if "'" in selection else "'"
-            locator = self.frame.locator(f"//div[normalize-space(text())={quote}{selection}{quote}]")
-
-            try:
-                locator.wait_for(state="visible", timeout=10000)
-                locator.scroll_into_view_if_needed()
-                locator.click()
-                expect(locator).to_be_visible(timeout=5000)
-                self.log.info(f"✅ Selected: {selection}")
-            except Exception as e:
-                self.log.error(f"❌ Failed to select '{selection}': {e}")
-
-    def hit_next_button(self):
-        """Click the 'Next' button."""
-        self.next_button.wait_for(state="visible", timeout=10000)
-        self.next_button.click()
-        self.log.info("➡️ Clicked 'Next' button")
