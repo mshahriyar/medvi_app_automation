@@ -31,7 +31,11 @@ def test_medvi_application_flow(
     taken_medication,
     glp1_medicine,
     last_three_month_medication,
+    surgery_weight_loss,
+    weight_loss_program,
     user_data,
+    clinically_appropriate,
+    weight_change_last_year,
 ):
 
     allure.dynamic.label("feature", "Qualification Flow")
@@ -141,13 +145,53 @@ def test_medvi_application_flow(
         glp1_medicine.agree_to_move_forward()
         glp1_medicine.hit_next_button()
 
-    with allure.step("Step 21: Tell me ast three month medication you took or not"):
+    with allure.step("Step 21: Tell me last three month medication you took or not"):
         last_three_month_medication.verify_last_three_month_medication_heading()
-        last_three_month_medication.select_last_three_month_medication_option("No")
-        # if user select yes than ask for medication name otherwise go to next button
-        # And in case of Yes the locator should be "(//input[@data-cy='input-component'])[1]"
+
+        # Example: Test both cases dynamically
+        user_choice = user_data["last_three_month_medication"]
+
+        if user_choice.lower() == "yes":
+            last_three_month_medication.select_last_three_month_medication_option(user_data["last_three_month_medication"], "Panadol")
+        else:
+            last_three_month_medication.select_last_three_month_medication_option("No")
+
         last_three_month_medication.hit_next_button()
 
+    with allure.step("Step 22: Tell me surgery weight loss you had or not"):
+        surgery_weight_loss.verify_surgery_weight_loss_heading()
+
+        # Example: Test both cases dynamically
+        user_choice = user_data["surgery_weight_loss"]
+
+        if user_choice.lower() == "yes":
+            surgery_weight_loss.select_surgery_weight_loss_option(user_data["surgery_weight_loss"], "Laser treatment in 2024")
+        else:
+            surgery_weight_loss.select_surgery_weight_loss_option("No")
+
+        surgery_weight_loss.hit_next_button()
+    
+    with allure.step("Step 23: Tell me weight loss program you had or not"):
+        weight_loss_program.verify_weight_loss_program_heading()
+
+        user_choice = user_data["weight_loss_program"]
+
+        if user_choice.lower() == "yes":
+            weight_loss_program.select_weight_loss_program_option(user_data["weight_loss_program"], "Weight Watchers")
+        else:
+            weight_loss_program.select_weight_loss_program_option("No")
+
+        weight_loss_program.hit_next_button()
+
+    with allure.step("Step 24: Select clinically appropriate option"):
+        clinically_appropriate.verify_clinically_appropriate_heading()
+        clinically_appropriate.select_clinically_appropriate_option(user_data["clinically_appropriate"])
+        clinically_appropriate.hit_next_button()
+
+    with allure.step("Step 25: Select weight change last year option"):
+        weight_change_last_year.verify_weight_change_last_year_heading()
+        weight_change_last_year.select_weight_change_last_year_option(user_data["weight_change_last_year"])
+        weight_change_last_year.hit_next_button()
 
     allure.attach(
         datetime.now().strftime("%Y-%m-%d %H:%M:%S"),

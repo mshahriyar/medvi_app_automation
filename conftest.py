@@ -26,8 +26,10 @@ from pages.additional_health_questions_page import AdditionalHealthQuestionsPage
 from pages.taken_medication_page import TakenMedicationPage
 from pages.glp1_medicine_page import GLP1MedicinePage
 from pages.last_three_month_medication_page import lastThreeMonthMedicationPage
-
-
+from pages.surgery_weight_loss_page import SurgeryWeightLossPage
+from pages.weight_loss_program_page import WeightLossProgramPage
+from pages.clinically_appropriate_page import ClinicallyAppropriatePage
+from pages.weight_change_last_year_page import WeightChangeLastYearPage
 # --------------------- Logging Configuration --------------------- #
 
 @pytest.fixture(autouse=True, scope="session")
@@ -249,6 +251,30 @@ def last_three_month_medication(page):
     return lastThreeMonthMedicationPage(page)
 
 
+@pytest.fixture(scope="function")
+def surgery_weight_loss(page):
+    """Surgery weight loss page fixture."""
+    return SurgeryWeightLossPage(page)
+
+
+@pytest.fixture(scope="function")
+def weight_loss_program(page):
+    """Weight loss program page fixture."""
+    return WeightLossProgramPage(page)
+
+
+@pytest.fixture(scope="function")
+def clinically_appropriate(page):
+    """Clinically appropriate page fixture."""
+    return ClinicallyAppropriatePage(page)
+
+
+@pytest.fixture(scope="function")
+def weight_change_last_year(page):
+    """Weight change last year page fixture."""
+    return WeightChangeLastYearPage(page)
+
+
 # ------------------- Test Data Fixtures ------------------- #
 
 @pytest.fixture(scope="function")
@@ -282,6 +308,10 @@ def user_data():
     last_dose_days = rnd.choice(["0-5 days", "6-10 days", "11-14 days", "More than 2 weeks ago but within the last 4 weeks", "More than 4 weeks ago"])
     # starting_weight = rnd.randint(75, 110)
     last_three_month_medication = rnd.choice(["Yes", "No"])
+    surgery_weight_loss = rnd.choice(["Yes", "No"])
+    weight_loss_program = rnd.choice(["Yes", "No"])
+    clinically_appropriate = rnd.choice(["Reduce your caloric intake alongside medication", "Increase your physical activity alongside medication", "None of the above"])
+    weight_change_last_year = rnd.choice(["Lost a significant amount", "Lost a little", "About the same", "Gained a little"])
     data = {
         "timestamp": timestamp,
         "feet": feet,
@@ -299,7 +329,11 @@ def user_data():
         "taken_medication": str(taken_medication),
         "last_dose_days": str(last_dose_days),
         "last_three_month_medication": str(last_three_month_medication),
-    }
+        "surgery_weight_loss": str(surgery_weight_loss),
+        "weight_loss_program": str(weight_loss_program),
+        "clinically_appropriate": str(clinically_appropriate),
+        "weight_change_last_year": str(weight_change_last_year),
+     }
 
     # Log the generated data
     print("🎲 Generated test data:")
