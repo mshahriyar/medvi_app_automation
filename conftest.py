@@ -24,7 +24,8 @@ from pages.body_review_page import BodyReviewPage
 from pages.health_conditions_page import HealthConditionsPage
 from pages.additional_health_questions_page import AdditionalHealthQuestionsPage
 from pages.taken_medication_page import TakenMedicationPage
-import csv
+from pages.glp1_medicine_page import GLP1MedicinePage
+from pages.last_three_month_medication_page import lastThreeMonthMedicationPage
 
 
 # --------------------- Logging Configuration --------------------- #
@@ -236,6 +237,18 @@ def taken_medication(page):
     return TakenMedicationPage(page)
 
 
+@pytest.fixture(scope="function")
+def glp1_medicine(page):
+    """GLP-1 medicine page fixture."""
+    return GLP1MedicinePage(page)
+
+
+@pytest.fixture(scope="function")
+def last_three_month_medication(page):
+    """Last three month medication page fixture."""
+    return lastThreeMonthMedicationPage(page)
+
+
 # ------------------- Test Data Fixtures ------------------- #
 
 @pytest.fixture(scope="function")
@@ -264,8 +277,11 @@ def user_data():
     sleep_routine = rnd.choice(["Pretty Good", "A bit restless", "I don't sleep well"])
     sleep_hours = rnd.choice(["Less than 5 hours", "6-7 hours", "8-9 hours", "More than 9 hours"])
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")    
-    taken_medication = rnd.choice(["Yes, I've taken GLP-1 medication", "Yes, I've taken a different medication for weight loss", "No"])
-
+    taken_medication = rnd.choice(["Yes, I've taken GLP-1 medication"])
+    # , "Yes, I've taken a different medication for weight loss", "No"
+    last_dose_days = rnd.choice(["0-5 days", "6-10 days", "11-14 days", "More than 2 weeks ago but within the last 4 weeks", "More than 4 weeks ago"])
+    # starting_weight = rnd.randint(75, 110)
+    last_three_month_medication = rnd.choice(["Yes", "No"])
     data = {
         "timestamp": timestamp,
         "feet": feet,
@@ -281,6 +297,8 @@ def user_data():
         "sleep": sleep_routine,
         "sleep_hours": sleep_hours,
         "taken_medication": str(taken_medication),
+        "last_dose_days": str(last_dose_days),
+        "last_three_month_medication": str(last_three_month_medication),
     }
 
     # Log the generated data
@@ -291,6 +309,4 @@ def user_data():
     return data
 
 
-# ------------------- Command Line Options ------------------- #
-
-# Note: Using pytest-playwright's built-in --browser and --headed options
+# --------

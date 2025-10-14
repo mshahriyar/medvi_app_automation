@@ -83,3 +83,21 @@ ALLURE_REPORTING.md
 
 # JUnit XML (optional - uncomment if you don't want to track)
 # reports/junit.xml
+
+# Ignore Python virtual environment
+.venv/
+__pycache__/
+
+# Ignore Allure test reports and results
+allure-results/
+allure-report/
+
+# Ignore local artifacts
+*.log
+*.zip
+*.png
+*.jpg
+reports/
+screenshots/
+trace.zip
+

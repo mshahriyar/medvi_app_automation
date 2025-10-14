@@ -39,8 +39,22 @@ class TakenMedicationPage:
         return "concat(" + ", \"'\", ".join(f"'{part}'" for part in parts) + ")"
 
 
+    def escape_xpath_text(self, text: str) -> str:
+        """
+        Safely escape text for XPath — handles both single and double quotes.
+        Example: "Yes, I've taken" → concat('Yes, I', "'", 've taken')
+        """
+        if "'" not in text:
+            return f"'{text}'"
+        if '"' not in text:
+            return f'"{text}"'
+        parts = text.split("'")
+        return "concat(" + ", \"'\", ".join(f"'{part}'" for part in parts) + ")"
+
+
     @allure.step("Select taken medication option")
     def select_taken_medication(self, taken_medication_value: str):
+        """Select a 'taken medication' option dynamically and verify its border color."""
         """Select a 'taken medication' option dynamically and verify its border color."""
         clean_value = taken_medication_value.strip()
         self.log.info(f"💊 Selecting taken medication: '{clean_value}'")
@@ -48,8 +62,12 @@ class TakenMedicationPage:
         # Build safe XPath for text with quotes
         safe_value = self.escape_xpath_text(clean_value)
         option_locator = self.frame.locator(f"xpath=//div[normalize-space(text())={safe_value}]")
+        # Build safe XPath for text with quotes
+        safe_value = self.escape_xpath_text(clean_value)
+        option_locator = self.frame.locator(f"xpath=//div[normalize-space(text())={safe_value}]")
 
         try:
+            # Wait for and click the main option
             # Wait for and click the main option
             option_locator.wait_for(state="visible", timeout=self.DEFAULT_TIMEOUT)
             option_locator.scroll_into_view_if_needed()
@@ -61,7 +79,22 @@ class TakenMedicationPage:
             radio = self.frame.locator(
                 f"xpath=//div[normalize-space(text())={safe_value}]/../../preceding-sibling::span"
             )
+            self.log.info(f"✅ Option clicked: '{clean_value}'")
+
+            # Locate the radio or highlight span and get computed border color
+            radio = self.frame.locator(
+                f"xpath=//div[normalize-space(text())={safe_value}]/../../preceding-sibling::span"
+            )
             border_color = radio.evaluate("el => getComputedStyle(el).borderColor")
+            self.log.info(f"🎨 Detected border color: {border_color}")
+
+            # ✅ Corrected: compare as string, not with expect()
+            assert border_color == "rgb(198, 166, 115)", (
+                f"❌ Border color mismatch for '{clean_value}': {border_color}"
+            )
+
+            self.log.info(f"✅ Successfully selected and verified: '{clean_value}'")
+
             self.log.info(f"🎨 Detected border color: {border_color}")
 
             # ✅ Corrected: compare as string, not with expect()
@@ -82,5 +115,3 @@ class TakenMedicationPage:
         next_button.wait_for(state="visible", timeout=self.DEFAULT_TIMEOUT)
         next_button.click()
         self.log.info("➡️ Clicked 'Next' button")
-
-

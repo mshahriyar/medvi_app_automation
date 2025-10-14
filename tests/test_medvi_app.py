@@ -9,7 +9,7 @@ from datetime import datetime
 @pytest.mark.critical
 @pytest.mark.ui
 @pytest.mark.regression
-def test_am_i_qualified(
+def test_medvi_application_flow(
     home_page,
     height_weight_page,
     goal_weight,
@@ -29,6 +29,8 @@ def test_am_i_qualified(
     health_conditions,
     additional_health_questions,
     taken_medication,
+    glp1_medicine,
+    last_three_month_medication,
     user_data,
 ):
 
@@ -130,6 +132,22 @@ def test_am_i_qualified(
     with allure.step("Step 19: Select taken medication"):
         taken_medication.select_taken_medication(user_data["taken_medication"])
         taken_medication.hit_next_button()
+
+    with allure.step("Step 20: Enter GLP-1 medicine details"):
+        glp1_medicine.enter_name_dose_frequency()
+        glp1_medicine.enter_last_dose_days(user_data["last_dose_days"])
+        glp1_medicine.enter_starting_weight()
+        # glp1_medicine.upload_glp1_photo("/Users/muhammadshahriyar/Documents/medvi_app_automation/data/shery_1.jpg")
+        glp1_medicine.agree_to_move_forward()
+        glp1_medicine.hit_next_button()
+
+    with allure.step("Step 21: Tell me ast three month medication you took or not"):
+        last_three_month_medication.verify_last_three_month_medication_heading()
+        last_three_month_medication.select_last_three_month_medication_option("No")
+        # if user select yes than ask for medication name otherwise go to next button
+        # And in case of Yes the locator should be "(//input[@data-cy='input-component'])[1]"
+        last_three_month_medication.hit_next_button()
+
 
     allure.attach(
         datetime.now().strftime("%Y-%m-%d %H:%M:%S"),

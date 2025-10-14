@@ -7,7 +7,7 @@ class GenderAndAgePage:
     """Handles gender and age selection interactions in the MEDVi Typeform flow."""
 
     IFRAME_SELECTOR = "iframe[title='1tAZd12DZCus']"
-    DEFAULT_TIMEOUT = 10000
+    DEFAULT_TIMEOUT = 15000
 
     def __init__(self, page: Page):
         self.page = page
@@ -26,6 +26,7 @@ class GenderAndAgePage:
         self.log.info(f"👤 Selecting gender: {gender}")
         gender_locator = self.frame.locator(f"//div[normalize-space(text())='{gender}']")
         gender_locator.wait_for(state="visible", timeout=self.DEFAULT_TIMEOUT)
+        gender_locator.scroll_into_view_if_needed()
         gender_locator.click()
         self.log.info(f"✅ Selected gender: {gender}")
 
@@ -35,8 +36,9 @@ class GenderAndAgePage:
         self.log.info(f"🎂 Selecting age range: {age}")
         dropdown = self.frame.locator("(//div[@data-cy='dropdown-component'])[1]//input")
         dropdown.wait_for(state="visible", timeout=self.DEFAULT_TIMEOUT)
+        dropdown.scroll_into_view_if_needed()
         dropdown.click()
-        self.page.wait_for_timeout(500)
+        self.page.wait_for_timeout(1000)
 
         # Common text patterns that might appear in the dropdown
         search_terms = [age]
