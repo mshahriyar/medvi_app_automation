@@ -36,14 +36,26 @@ def test_medvi_application_flow(
     user_data,
     clinically_appropriate,
     weight_change_last_year,
+    average_blood_pressure_range,
+    body_changing_img,
+    average_resting_heart_rate,
+    best_medicine_match,
+    currently_taking_medicine,
+    understand_state_of_mind,
+    info_shared_with_medical_team,
+    your_need,
+    date_of_birth,
+    your_medical_review,
+    check_eligibility,
+    submission_form,
 ):
-
+    """Test the complete MEDVi application flow."""
     allure.dynamic.label("feature", "Qualification Flow")
     allure.dynamic.label("owner", "QA Automation Team")
     allure.dynamic.label("epic", "MEDVi Intake Journey")
 
     with allure.step("Step 1: Navigate to MEDVi and start qualification flow"):
-        home_page.open()
+        home_page.open()        
         home_page.click_get_started()
 
     with allure.step("Step 2: Fill height and weight details"):
@@ -141,7 +153,7 @@ def test_medvi_application_flow(
         glp1_medicine.enter_name_dose_frequency()
         glp1_medicine.enter_last_dose_days(user_data["last_dose_days"])
         glp1_medicine.enter_starting_weight()
-        # glp1_medicine.upload_glp1_photo("/Users/muhammadshahriyar/Documents/medvi_app_automation/data/shery_1.jpg")
+        glp1_medicine.upload_glp1_photo("/Users/muhammadshahriyar/Documents/medvi_app_automation/data/shery_1.jpg")
         glp1_medicine.agree_to_move_forward()
         glp1_medicine.hit_next_button()
 
@@ -192,6 +204,83 @@ def test_medvi_application_flow(
         weight_change_last_year.verify_weight_change_last_year_heading()
         weight_change_last_year.select_weight_change_last_year_option(user_data["weight_change_last_year"])
         weight_change_last_year.hit_next_button()
+    
+    with allure.step("Step 26: Verify body changing img heading and image"):
+        body_changing_img.verify_body_changing_img_heading()
+        body_changing_img.hit_next_button()
+
+    with allure.step("Step 27: Select average blood pressure range option"):
+        average_blood_pressure_range.verify_average_blood_pressure_range_heading()
+        average_blood_pressure_range.select_average_blood_pressure_range_option()
+        average_blood_pressure_range.hit_next_button()
+
+    with allure.step("Step 28: Select average resting heart rate option"):
+        average_resting_heart_rate.verify_average_resting_heart_rate_heading()
+        average_resting_heart_rate.select_average_resting_heart_rate_option()
+        average_resting_heart_rate.hit_next_button()
+
+    with allure.step("Step 29: Select best medicine match option"):
+        best_medicine_match.verify_best_medicine_match_heading()
+        best_medicine_match.select_best_medicine_match(user_data["best_medicine_match"])
+        best_medicine_match.select_glp1_tablet_or_injection(user_data["glp1_tablet_or_injection"])
+        best_medicine_match.hit_next_button()
+
+    with allure.step("Step 30: Select currently taking medicine option"):
+        currently_taking_medicine.verify_currently_taking_medicine_heading_and_image_displayed()
+        currently_taking_medicine.select_currently_taking_medicine_option(user_data["currently_taking_medicine"])
+        currently_taking_medicine.hit_next_button()
+
+
+    with allure.step("Step 31: Select understand state of mind option"):
+        understand_state_of_mind.verify_understand_state_of_mind_heading(user_data["goal_weight"])
+        understand_state_of_mind.select_understand_state_of_mind_option(user_data["understand_state_of_mind"])
+        understand_state_of_mind.hit_next_button()
+    
+    with allure.step("Step 32: Select info shared with medical team option"):
+        info_shared_with_medical_team.verify_info_shared_with_medical_team_heading_displayed()
+        info_shared_with_medical_team.select_info_shared_with_medical_team_option(user_data["info_shared_with_medical_team"])
+        info_shared_with_medical_team.hit_next_button()    
+
+
+    with allure.step("Step 33: Select multiple 'Your Need' options"):
+        your_need.verify_your_need_heading_displayed()
+        your_need.verify_all_options_visible()
+        your_need.select_multiple_options([
+            "Maintaining muscle mass as I lose weight",
+            "Improving cognitive function and mental clarity",
+            "Improving sleep quality",
+        ])
+        your_need.hit_next_button()
+
+    with allure.step("Step 34: Select date of birth"):
+        date_of_birth.verify_date_of_birth_heading_displayed()
+        date_of_birth.select_month("November")
+        date_of_birth.select_day("23")
+        date_of_birth.add_year("1995")
+        date_of_birth.hit_next_button()
+
+    with allure.step("Step 35: Verify your medical review content"):
+        your_medical_review.verify_your_medical_review_heading_displayed()
+        your_medical_review.verify_your_medical_review_content_displayed()
+        your_medical_review.add_first_name("Shahriyar")
+        your_medical_review.add_last_name("Abid")
+        your_medical_review.select_shipping_state("AZ")
+        your_medical_review.hit_next_button()
+    
+    with allure.step("Step 36: Check Eligibility"):
+        check_eligibility.verify_check_eligibility_content_displayed()
+        check_eligibility.add_email("testqashahriyar@gmail.com")
+        check_eligibility.add_phone("2025553600")
+        check_eligibility.verify_image_displayed()
+        check_eligibility.hit_next_button()
+    
+    with allure.step("Step 37: Verify submission form page heading displayed"):
+        submission_form.verify_submission_form_page_heading_displayed()
+        submission_form.verify_edit_info_is_working()
+        submission_form.hit_check_eligibility_button()
+        submission_form.hit_submit_button()
+        print("Finally you did it!!!!!!!!!")
+
 
     allure.attach(
         datetime.now().strftime("%Y-%m-%d %H:%M:%S"),

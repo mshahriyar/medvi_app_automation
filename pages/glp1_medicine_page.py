@@ -62,30 +62,36 @@ class GLP1MedicinePage:
         starting_weight.fill("90")
         self.log.info(f"✅ Starting weight entered successfully")
 
+    @allure.step("Upload GLP-1 medication photo")
+    def upload_glp1_photo(self, file_path: str):
+        """Uploads a GLP-1 medication photo file."""
+        verify_upload_glp1_photo_heading = self.frame.locator("//h3[text() ='Please take or upload a photo of your GLP-1 medication']")
+        verify_upload_glp1_photo_heading.scroll_into_view_if_needed()
+        expect(verify_upload_glp1_photo_heading).to_be_visible(timeout=self.DEFAULT_TIMEOUT)
+        self.log.info(f"📸 Uploading medication photo: {file_path}")
+        upload_input = self.frame.locator("(//input[@type='file'])[1]")
+        upload_input.set_input_files(file_path)
+        expect(upload_input).to_be_visible(timeout=self.DEFAULT_TIMEOUT)
+        self.log.info("✅ Photo uploaded successfully")
+
     @allure.step("Do you agree to move forward with his program")
     def agree_to_move_forward(self):
         """Agree to move forward with the program."""
         self.log.info("💊 Agreeing to move forward with the program.")
         verify_agree_to_move_forward_heading = self.frame.locator("//span[text() ='Do you agree to only obtain weight loss medication through this program moving forward?']")
+        verify_agree_to_move_forward_heading.scroll_into_view_if_needed()
         expect(verify_agree_to_move_forward_heading).to_be_visible(timeout=self.DEFAULT_TIMEOUT)
         agree_to_move_forward = self.frame.locator("//div[normalize-space(text())='Yes']")
         agree_to_move_forward.wait_for(state="visible", timeout=self.DEFAULT_TIMEOUT)
         agree_to_move_forward.click()
         self.log.info("✅ Agreed to move forward with the program.")
 
-    @allure.step("Upload GLP-1 medication photo")
-    def upload_glp1_photo(self, file_path: str):
-        """Uploads a GLP-1 medication photo file."""
-        self.log.info(f"📸 Uploading medication photo: {file_path}")
-        upload_input = self.frame.locator("input[type='file']")
-        upload_input.set_input_files(file_path) 
-        expect(upload_input).to_be_visible(timeout=self.DEFAULT_TIMEOUT)
-        self.log.info("✅ Photo uploaded successfully")
 
     @allure.step("Click 'Next' button")
     def hit_next_button(self):
         """Click the 'Next' button."""
         next_button = self.frame.locator("//button[@data-cy='button-component']")
         next_button.wait_for(state="visible", timeout=self.DEFAULT_TIMEOUT)
-        next_button.click()
+        next_button.click(force=True)
         self.log.info("➡️ Clicked 'Next' button")
+        self.page.wait_for_timeout(1000)

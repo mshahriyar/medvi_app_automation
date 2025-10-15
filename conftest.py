@@ -30,6 +30,18 @@ from pages.surgery_weight_loss_page import SurgeryWeightLossPage
 from pages.weight_loss_program_page import WeightLossProgramPage
 from pages.clinically_appropriate_page import ClinicallyAppropriatePage
 from pages.weight_change_last_year_page import WeightChangeLastYearPage
+from pages.average_blood_pressure_range_page import AverageBloodPressureRangePage
+from pages.body_changing_img_page import BodyChangingImgPage
+from pages.average_resting_heart_rate_page import AverageRestingHeartRatePage
+from pages.best_medicine_match_page import BestMedicineMatchPage
+from pages.currently_taking_medicine_page import CurrentlyTakingMedicinePage
+from pages.understand_state_of_mind_page import UnderstandStateOfMindPage
+from pages.info_shared_with_medical_team_page import InfoSharedWithMedicalTeamPage
+from pages.your_need_page import YourNeedPage
+from pages.date_of_birth_page import DateOfBirthPage
+from pages.your_medical_review_page import YourMedicalReviewPage
+from pages.check_eligibility_page import CheckEligibilityPage
+from pages.submission_form_page import SubmissionFormPage
 # --------------------- Logging Configuration --------------------- #
 
 @pytest.fixture(autouse=True, scope="session")
@@ -275,6 +287,70 @@ def weight_change_last_year(page):
     return WeightChangeLastYearPage(page)
 
 
+@pytest.fixture(scope="function")
+def average_blood_pressure_range(page):
+    """Average blood pressure range page fixture."""
+    return AverageBloodPressureRangePage(page)
+
+
+@pytest.fixture(scope="function")
+def body_changing_img(page):
+    """Body changing img page fixture."""
+    return BodyChangingImgPage(page)
+
+
+@pytest.fixture(scope="function")
+def average_resting_heart_rate(page):
+    """Average resting heart rate page fixture."""
+    return AverageRestingHeartRatePage(page)
+
+
+@pytest.fixture(scope="function")
+def best_medicine_match(page):
+    """Best medicine match page fixture."""
+    return BestMedicineMatchPage(page)
+
+
+@pytest.fixture(scope="function")
+def currently_taking_medicine(page):
+    """Currently taking medicine page fixture."""
+    return CurrentlyTakingMedicinePage(page)
+
+
+@pytest.fixture(scope="function")
+def understand_state_of_mind(page):
+    """Understand state of mind page fixture."""
+    return UnderstandStateOfMindPage(page)
+
+@pytest.fixture(scope="function")
+def your_need(page):
+    """Your need page fixture."""
+    return YourNeedPage(page)
+
+@pytest.fixture(scope="function")
+def info_shared_with_medical_team(page):
+    """Info shared with medical team page fixture."""
+    return InfoSharedWithMedicalTeamPage(page)
+
+@pytest.fixture(scope="function")
+def date_of_birth(page):
+    """Date of birth page fixture."""
+    return DateOfBirthPage(page)
+
+@pytest.fixture(scope="function")
+def your_medical_review(page):
+    """Your medical review page fixture."""
+    return YourMedicalReviewPage(page)
+
+@pytest.fixture(scope="function")
+def check_eligibility(page):
+    """Check eligibility page fixture."""
+    return CheckEligibilityPage(page)
+
+@pytest.fixture(scope="function")
+def submission_form(page):
+    """Submission form page fixture."""
+    return SubmissionFormPage(page)
 # ------------------- Test Data Fixtures ------------------- #
 
 @pytest.fixture(scope="function")
@@ -312,6 +388,11 @@ def user_data():
     weight_loss_program = rnd.choice(["Yes", "No"])
     clinically_appropriate = rnd.choice(["Reduce your caloric intake alongside medication", "Increase your physical activity alongside medication", "None of the above"])
     weight_change_last_year = rnd.choice(["Lost a significant amount", "Lost a little", "About the same", "Gained a little"])
+    best_medicine_match = rnd.choice(["Affordability", "Potency"])
+    glp1_tablet_or_injection = rnd.choice(["I prefer to inject", "I prefer a tablet"])
+    currently_taking_medicine = rnd.choice(["Yes", "No"])
+    understand_state_of_mind = rnd.choice(["I'm Ready!", "I'm feeling hopeful", "I'm cautious"])
+    info_shared_with_medical_team = rnd.choice(["Yes", "No"])
     data = {
         "timestamp": timestamp,
         "feet": feet,
@@ -333,6 +414,11 @@ def user_data():
         "weight_loss_program": str(weight_loss_program),
         "clinically_appropriate": str(clinically_appropriate),
         "weight_change_last_year": str(weight_change_last_year),
+        "best_medicine_match": str(best_medicine_match),
+        "glp1_tablet_or_injection": str(glp1_tablet_or_injection),
+        "currently_taking_medicine": str(currently_taking_medicine),
+        "understand_state_of_mind": str(understand_state_of_mind),
+        "info_shared_with_medical_team": str(info_shared_with_medical_team),
      }
 
     # Log the generated data
@@ -342,5 +428,3 @@ def user_data():
 
     return data
 
-
-# --------

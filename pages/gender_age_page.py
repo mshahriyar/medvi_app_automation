@@ -35,11 +35,11 @@ class GenderAndAgePage:
         """Select user's age range from dropdown."""
         self.log.info(f"🎂 Selecting age range: {age}")
         dropdown = self.frame.locator("(//div[@data-cy='dropdown-component'])[1]//input")
-        dropdown.wait_for(state="visible", timeout=self.DEFAULT_TIMEOUT)
         dropdown.scroll_into_view_if_needed()
-        dropdown.click()
-        self.page.wait_for_timeout(1000)
-
+        dropdown.click(force=True)
+        listbox = self.frame.locator("//div[@role = 'listbox']")
+        listbox.scroll_into_view_if_needed()
+        expect(listbox).to_be_visible(timeout=5000)
         # Common text patterns that might appear in the dropdown
         search_terms = [age]
         if "–" in age:

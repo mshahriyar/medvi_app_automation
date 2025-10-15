@@ -38,9 +38,6 @@ class HeightWeightPage:
                 self.page.wait_for_selector(self.IFRAME_SELECTOR, state="attached", timeout=10000)
                 self.frame = self.page.frame_locator(self.IFRAME_SELECTOR)
 
-                feet_dropdown = self.frame.locator("(//div[@data-cy='dropdown-component'])[1]//input")
-                feet_dropdown.wait_for(state="visible", timeout=10000)
-
                 self.log.info("✅ Iframe loaded and form visible!")
                 return
             except Exception as e:
