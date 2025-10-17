@@ -1,7 +1,7 @@
 import pytest
 import allure
 from datetime import datetime
-
+from pathlib import Path
 
 @allure.title("MEDVi Qualification Flow Automation")
 @allure.description("This test verifies the complete 'Am I Qualified?' flow across all MEDVi form pages.")
@@ -153,7 +153,8 @@ def test_medvi_application_flow(
         glp1_medicine.enter_name_dose_frequency()
         glp1_medicine.enter_last_dose_days(user_data["last_dose_days"])
         glp1_medicine.enter_starting_weight()
-        glp1_medicine.upload_glp1_photo("/Users/muhammadshahriyar/Documents/medvi_app_automation/data/shery_1.jpg")
+        photo_path = str(Path(__file__).resolve().parents[1] / "data" / "shery_1.jpg")
+        glp1_medicine.upload_glp1_photo(photo_path)
         glp1_medicine.agree_to_move_forward()
         glp1_medicine.hit_next_button()
 
