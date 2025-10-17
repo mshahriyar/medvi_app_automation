@@ -26,7 +26,6 @@ jobs:
     env:
       PYTHONUNBUFFERED: "1"
       PIP_DISABLE_PIP_VERSION_CHECK: "1"
-      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
 
     steps:
       - name: 📥 Checkout Code
@@ -42,7 +41,7 @@ jobs:
         with:
           path: |
             ~/.cache/pip
-            /ms-playwright
+            ~/.cache/ms-playwright
           key: ${{ runner.os }}-deps-${{ hashFiles('requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-deps-
@@ -63,8 +62,18 @@ jobs:
           mkdir -p allure-results
           mkdir -p reports
 
-      - name: 🧪 Run Tests with Allure
+      - name: 🔍 Debug File Structure
         run: |
+          echo "=== File Structure ==="
+          ls -la
+          echo "=== Data Directory ==="
+          ls -la data/
+          echo "=== Test File ==="
+          head -10 tests/test_medvi_app.py
+
+      - name: 🧪 Run Tests with Allure (with debugging)
+        run: |
+          echo "Starting test execution..."
           pytest \
             --alluredir=allure-results \
             --clean-alluredir \
@@ -72,8 +81,10 @@ jobs:
             --html=reports/report.html \
             --self-contained-html \
             -v \
-            --tb=short \
-            --maxfail=1
+            --tb=long \
+            --maxfail=1 \
+            --capture=no \
+            --log-cli-level=INFO
 
       - name: 📊 Generate Allure Report
         if: always()
@@ -94,6 +105,17 @@ jobs:
             screenshots/
             reports/
           retention-days: 30
+
+      - name: 🔍 Debug on Failure
+        if: failure()
+        run: |
+          echo "=== Test failed, checking logs ==="
+          echo "=== Screenshots ==="
+          ls -la screenshots/ || echo "No screenshots found"
+          echo "=== Allure Results ==="
+          ls -la allure-results/ || echo "No allure results found"
+          echo "=== Reports ==="
+          ls -la reports/ || echo "No reports found"
 
   publish-report:
     if: always()
