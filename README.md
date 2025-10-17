@@ -1,4 +1,5 @@
 # 🏥 MEDVi Automation Testing Project
+[![CI](https://github.com/mshahriyar/medvi_app_automation/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mshahriyar/medvi_app_automation/actions/workflows/ci.yml)
 
 ## 📋 Project Overview
 
@@ -99,3 +100,7 @@ pytest -v -s --alluredir=allure-results --clean-alluredir
 allure generate allure-results -o allure-report --clean
 allure serve allure-results
 allure open allure-report
+```
+
+- Replace `OWNER` and `REPO` with your GitHub org/user and repo name.
+- If your workflow file isn’t `ci.yml`, update the badge URL path accordingly (e.g., `medvi-ci.yml`).

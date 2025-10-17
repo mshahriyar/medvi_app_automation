@@ -22,9 +22,7 @@ requests==2.32.5
 typing_extensions>=4.15.0
 
 # ==========================================================
-# ✅ Optional (for local HTML reports or logs)
+# ✅ HTML Reporting
 # ==========================================================
-# pytest-html==4.1.1
-# pytest-metadata==3.1.1
-# pytest-sugar==1.1.1
-# termcolor==3.1.0
+pytest-html==4.1.1
+pytest-metadata==3.1.1
