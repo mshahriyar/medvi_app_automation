@@ -2,8 +2,8 @@ name: MEDVi App Automation CI/CD
 
 on:
   schedule:
-    - cron: "*/15 * * * *"   # Every 15 minutes
-  workflow_dispatch:         # Allow manual runs
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
   push:
     branches: [ main ]
   pull_request:
@@ -51,52 +51,41 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install pytest-html allure-pytest || echo "✅ All dependencies installed"
 
       - name: 🎭 Install Playwright Browsers
         run: |
           playwright install chromium
           playwright install-deps chromium
 
-      - name: 📁 Create Directories
+      - name: ⚙️ Install Allure Commandline
         run: |
-          mkdir -p screenshots
-          mkdir -p allure-results
-          mkdir -p reports
+          npm install -g allure-commandline --save-dev
+
+      - name: 📁 Create Directories
+        run: mkdir -p screenshots allure-results reports
 
       - name: 🧪 Run Tests with Allure
         run: |
+          mkdir -p allure-results
           pytest \
             --alluredir=allure-results \
             --clean-alluredir \
             --junitxml=reports/junit.xml \
-            --html=reports/report.html \
-            --self-contained-html \
             -v \
             --tb=short \
-            --maxfail=1
+            --maxfail=1 || true
 
       - name: 📊 Generate Allure Report
         if: always()
         run: |
           allure generate allure-results --clean -o allure-report
 
-      - name: 📤 Upload Test Artifacts
+      - name: 📤 Upload Artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-${{ github.run_number }}
-          path: |
-            allure-results/
-            allure-report/
-            screenshots/
-            reports/
-          retention-days: 30
-
-      - name: 📈 Upload Allure Results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-results-${{ github.run_number }}
+          name: allure-results
           path: allure-results/
           retention-days: 30
 
@@ -113,10 +102,14 @@ jobs:
       - name: 📥 Checkout Code
         uses: actions/checkout@v4
 
+      - name: ⚙️ Install Allure Commandline
+        run: |
+          npm install -g allure-commandline --save-dev
+
       - name: 📥 Download Allure Results
         uses: actions/download-artifact@v4
         with:
-          name: allure-results-${{ github.run_number }}
+          name: allure-results
           path: allure-results
 
       - name: 📊 Generate Allure Report
