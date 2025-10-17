@@ -15,10 +15,37 @@ class GoalWeightPage:
 
     @property
     def frame(self):
-        """Always get a fresh frame locator (avoids stale reference)."""
+        """Always return a fresh frame locator to avoid stale references."""
         return self.page.frame_locator(self.IFRAME_SELECTOR)
 
+    # ---------------------- Utilities ---------------------- #
+    @staticmethod
+    def escape_xpath_text(text: str) -> str:
+        """Safely escape text for XPath — handles both single and double quotes."""
+        if "'" not in text:
+            return f"'{text}'"
+        if '"' not in text:
+            return f'"{text}"'
+        parts = text.split("'")
+        return "concat(" + ", \"'\", ".join(f"'{part}'" for part in parts) + ")"
+
     # ---------------------- Actions ---------------------- #
+    @allure.step("Verify goal weight page heading displayed")
+    def verify_goal_weight_page_heading_displayed(self):
+        """Verify the goal weight page heading displayed."""
+        self.log.info("🔍 Verifying goal weight page heading displayed...")
+
+        # Safely escaped text for both headings
+        safe_text_1 = self.escape_xpath_text("We're in this together.")
+        safe_text_2 = self.escape_xpath_text("What is your goal weight?")
+
+        heading_1 = self.frame.locator(f"//*[normalize-space(text())={safe_text_1}]")
+        heading_2 = self.frame.locator(f"//*[normalize-space(text())={safe_text_2}]")
+
+        expect(heading_1).to_be_visible(timeout=self.DEFAULT_TIMEOUT)
+        expect(heading_2).to_be_visible(timeout=self.DEFAULT_TIMEOUT)
+
+        self.log.info("✅ Goal weight page headings verified successfully")
 
     @allure.step("Enter goal weight")
     def add_goal_weight(self, goal_weight: str):
@@ -31,18 +58,6 @@ class GoalWeightPage:
 
         expect(goal_input).to_have_value(goal_weight, timeout=5000)
         self.log.info("✅ Goal weight entered successfully")
-
-    @allure.step("Verify motivational text is visible")
-    def verify_together_text(self):
-        """Ensure motivational text appears."""
-        self.log.info("🔍 Verifying motivational text...")
-
-        together_text = self.frame.locator("text=We're in this together. Your goal is our goal.")
-        try:
-            expect(together_text).to_be_visible(timeout=5000)
-            self.log.info("✅ Motivational text is visible")
-        except Exception as e:
-            self.log.warning(f"⚠️ Motivational text not found: {e}")
 
     @allure.step("Click 'Next' button")
     def hit_next_button(self):
