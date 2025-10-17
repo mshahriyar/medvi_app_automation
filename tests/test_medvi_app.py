@@ -50,12 +50,12 @@ def test_medvi_application_flow(
     submission_form,
 ):
     """Test the complete MEDVi application flow."""
-    allure.dynamic.label("feature", "Qualification Flow")
-    allure.dynamic.label("owner", "QA Automation Team")
-    allure.dynamic.label("epic", "MEDVi Intake Journey")
+    allure.dynamic.label("feature", "Assessment Flow")
+    allure.dynamic.label("owner", "Muhammad Shahriyar")
+    allure.dynamic.label("epic", "MEDVi Assessment Journey")
 
-    with allure.step("Step 1: Navigate to MEDVi and start qualification flow"):
-        home_page.open()        
+    with allure.step("Step 1: Navigate to MEDVi and start Assessment flow"):
+        home_page.open()
         home_page.click_get_started()
 
     with allure.step("Step 2: Fill height and weight details"):
@@ -71,23 +71,28 @@ def test_medvi_application_flow(
         goal_weight.hit_next_button()
 
     with allure.step("Step 4: Select gender and age"):
+        gender_and_age.verify_gender_and_age_content_visible()
         gender_and_age.select_gender(user_data["gender"])
         gender_and_age.select_age(user_data["age"])
         gender_and_age.hit_next_button()
 
     with allure.step("Step 5: Select experience illness"):
+        experience_illness.verify_experience_illness_content_visible()
         experience_illness.select_experience_illness(user_data["experience_illness"])
         experience_illness.hit_next_button()
 
     with allure.step("Step 6: Set priority goal"):
+        priority.verify_priority_content_visible()
         priority.select_goal(user_data["priority"])
         priority.hit_next_button()
 
     with allure.step("Step 7: Verify ranking section"):
+        rank.verify_rank_content_visible()
         rank.verify_rank()
         rank.hit_next_button()
 
     with allure.step("Step 8: Verify metabolic graph"):
+        metabolic_graph.verify_metabolic_graph_content_visible()
         metabolic_graph.verify_graph()
         metabolic_graph.hit_next_button()
 
@@ -96,6 +101,7 @@ def test_medvi_application_flow(
         frank_new_man.hit_next_button()
 
     with allure.step("Step 10: Verify GLP-1 informational content"):
+        gpl.verify_glp1_content()
         gpl.wait_for_glp1_graph()
         gpl.verify_glp1_content()
         gpl.hit_next_button()
@@ -106,6 +112,7 @@ def test_medvi_application_flow(
         reasons.hit_next_button()
 
     with allure.step("Step 12: Choose weight loss expectations"):
+        lose_weight.verify_lose_weight_heading()
         lose_weight.select_lose_weight(user_data["lose_weight"])
         lose_weight.hit_next_button()
 
@@ -183,7 +190,7 @@ def test_medvi_application_flow(
             surgery_weight_loss.select_surgery_weight_loss_option("No")
 
         surgery_weight_loss.hit_next_button()
-    
+
     with allure.step("Step 23: Tell me weight loss program you had or not"):
         weight_loss_program.verify_weight_loss_program_heading()
 
@@ -205,7 +212,7 @@ def test_medvi_application_flow(
         weight_change_last_year.verify_weight_change_last_year_heading()
         weight_change_last_year.select_weight_change_last_year_option(user_data["weight_change_last_year"])
         weight_change_last_year.hit_next_button()
-    
+
     with allure.step("Step 26: Verify body changing img heading and image"):
         body_changing_img.verify_body_changing_img_heading()
         body_changing_img.hit_next_button()
@@ -236,11 +243,11 @@ def test_medvi_application_flow(
         understand_state_of_mind.verify_understand_state_of_mind_heading(user_data["goal_weight"])
         understand_state_of_mind.select_understand_state_of_mind_option(user_data["understand_state_of_mind"])
         understand_state_of_mind.hit_next_button()
-    
+
     with allure.step("Step 32: Select info shared with medical team option"):
         info_shared_with_medical_team.verify_info_shared_with_medical_team_heading_displayed()
         info_shared_with_medical_team.select_info_shared_with_medical_team_option(user_data["info_shared_with_medical_team"])
-        info_shared_with_medical_team.hit_next_button()    
+        info_shared_with_medical_team.hit_next_button()
 
 
     with allure.step("Step 33: Select multiple 'Your Need' options"):
@@ -267,14 +274,14 @@ def test_medvi_application_flow(
         your_medical_review.add_last_name("Abid")
         your_medical_review.select_shipping_state("AZ")
         your_medical_review.hit_next_button()
-    
+
     with allure.step("Step 36: Check Eligibility"):
         check_eligibility.verify_check_eligibility_content_displayed()
         check_eligibility.add_email("testqashahriyar@gmail.com")
         check_eligibility.add_phone("2025553600")
         check_eligibility.verify_image_displayed()
         check_eligibility.hit_next_button()
-    
+
     with allure.step("Step 37: Verify submission form page heading displayed"):
         submission_form.verify_submission_form_page_heading_displayed()
         submission_form.verify_edit_info_is_working()

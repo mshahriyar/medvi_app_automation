@@ -3,18 +3,18 @@
 
 ## 📋 Project Overview
 
-This project automates the **MEDVi qualification flow** using **Playwright + Pytest**, producing **Allure reports** with detailed steps, logs, and screenshots.  
+This project automates the **MEDVi qualification flow** using **Playwright + Pytest**, producing **Allure reports** with detailed steps, logs, and screenshots.
 It simulates the complete user journey — from initial qualification to health assessment — and provides client-ready reports ideal for presentations and CI/CD pipelines.
 
 ---
 
 ## 🎯 What This Project Does
 
-- 🤖 **Automated End-to-End Testing** – Covers the complete MEDVi flow  
-- 📊 **Allure Reporting** – Generates interactive visual reports  
-- 🖼️ **Screenshots on Failures** – Automatically captured for every failed step  
-- 📧 **Client-Ready Reports** – Easy to share and review  
-- 🔁 **CI/CD Compatible** – Integrates with GitHub Actions or Jenkins  
+- 🤖 **Automated End-to-End Testing** – Covers the complete MEDVi flow
+- 📊 **Allure Reporting** – Generates interactive visual reports
+- 🖼️ **Screenshots on Failures** – Automatically captured for every failed step
+- 📧 **Client-Ready Reports** – Easy to share and review
+- 🔁 **CI/CD Compatible** – Integrates with GitHub Actions or Jenkins
 
 ---
 
@@ -22,9 +22,9 @@ It simulates the complete user journey — from initial qualification to health 
 
 ### 🧩 Prerequisites
 
-- Python **3.8+**  
-- macOS / Linux / Windows  
-- Chrome browser installed  
+- Python **3.8+**
+- macOS / Linux / Windows
+- Chrome browser installed
 - Node.js (optional, for Allure CLI)
 
 ---
@@ -102,5 +102,3 @@ allure serve allure-results
 allure open allure-report
 ```
 
-- Replace `OWNER` and `REPO` with your GitHub org/user and repo name.
-- If your workflow file isn’t `ci.yml`, update the badge URL path accordingly (e.g., `medvi-ci.yml`).

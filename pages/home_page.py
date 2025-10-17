@@ -5,7 +5,6 @@ import allure
 
 
 class HomePage:
-    """Handles navigation to MEDVi website and clicking the qualification button."""
 
     def __init__(self, page: Page):
         self.page = page

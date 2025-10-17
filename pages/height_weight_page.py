@@ -1,17 +1,13 @@
 from playwright.sync_api import Page, expect
 import logging, time
 import allure
+# pyright: ignore[reportMissingImports]
+from utils.base_page import BasePage
 
-
-class HeightWeightPage:
-    """Handles height and weight form interactions in the MEDVi Typeform iframe."""
-
-    IFRAME_SELECTOR = "iframe[title='1tAZd12DZCus']"
+class HeightWeightPage(BasePage):
 
     def __init__(self, page: Page):
-        self.page = page
-        self.log = logging.getLogger("HeightWeightPage")
-        self.frame = None
+        super().__init__(page)
 
     # ----------------------- Helpers -----------------------
 
@@ -30,19 +26,26 @@ class HeightWeightPage:
 
     @allure.step("Wait for Typeform iframe to load")
     def wait_for_iframe_ready(self, max_retries: int = 5):
-        """Wait for the Typeform iframe to fully load."""
+        """Wait for the Typeform iframe to fully load (and the first control is visible)."""
         self.log.info("🔄 Waiting for iframe to load...")
 
         for attempt in range(1, max_retries + 1):
             try:
-                self.page.wait_for_selector(self.IFRAME_SELECTOR, state="attached", timeout=10000)
-                self.frame = self.page.frame_locator(self.IFRAME_SELECTOR)
+                # 1) Ensure iframe element is present
+                self.page.wait_for_selector(
+                    self.IFRAME_SELECTOR, state="attached", timeout=self.DEFAULT_TIMEOUT
+                )
 
-                self.log.info("✅ Iframe loaded and form visible!")
+                # 2) Ensure a known control inside iframe is visible (feet dropdown)
+                feet_input = self.frame.locator("(//div[@data-cy='dropdown-component'])[1]//input")
+                feet_input.wait_for(state="visible", timeout=self.DEFAULT_TIMEOUT)
+
+                self.log.info("✅ Iframe loaded and first control visible")
                 return
             except Exception as e:
                 self.log.warning(f"⚠️ Iframe not ready (Attempt {attempt}/{max_retries}): {e}")
                 if attempt < max_retries:
+                    # Light recovery: reload page (or you could reassign iframe src)
                     self.page.reload()
                     time.sleep(3)
                 else:
@@ -71,25 +74,25 @@ class HeightWeightPage:
     @allure.step("Click 'Next' button")
     def hit_next_button(self):
         """Click the 'Next' button safely."""
-        self._retry_action(lambda: self._click_next())
+        self._retry_action(self._click_next)
         self.log.info("➡️ Clicked 'Next' button")
 
     # ----------------------- Internal Methods -----------------------
 
     def _select_dropdown(self, position: int, value: str):
         dropdown = self.frame.locator(f"(//div[@data-cy='dropdown-component'])[{position}]//input")
-        dropdown.wait_for(state="visible", timeout=10000)
+        dropdown.wait_for(state="visible", timeout=self.DEFAULT_TIMEOUT)
         dropdown.click()
         dropdown.fill(value)
         self.page.keyboard.press("Enter")
 
     def _fill_input(self, value: str):
         weight_input = self.frame.locator("(//input[@data-cy='input-component'])[1]")
-        weight_input.wait_for(state="visible", timeout=10000)
+        weight_input.wait_for(state="visible", timeout=self.DEFAULT_TIMEOUT)
         weight_input.fill(value)
-        expect(weight_input).to_have_value(value)
+        expect(weight_input).to_have_value(value, timeout=self.DEFAULT_TIMEOUT)
 
     def _click_next(self):
         next_button = self.frame.locator("//button[@data-cy='button-component']")
-        next_button.wait_for(state="visible", timeout=10000)
+        next_button.wait_for(state="visible", timeout=self.DEFAULT_TIMEOUT)
         next_button.click()
