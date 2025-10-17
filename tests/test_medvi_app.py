@@ -60,14 +60,16 @@ def test_medvi_application_flow(
 
     with allure.step("Step 2: Fill height and weight details"):
         height_weight_page.wait_for_iframe_ready()
+        height_weight_page.verify_height_weight_page_heading_and_image_displayed()
+        height_weight_page.verify_what_is_your_height_and_weight_question_displayed()
         height_weight_page.select_feet(user_data["feet"])
         height_weight_page.select_inches(user_data["inches"])
         height_weight_page.add_weight(user_data["weight"])
         height_weight_page.hit_next_button()
 
     with allure.step("Step 3: Set goal weight"):
+        goal_weight.verify_goal_weight_page_heading_displayed()
         goal_weight.add_goal_weight(user_data["goal_weight"])
-        goal_weight.verify_together_text()
         goal_weight.hit_next_button()
 
     with allure.step("Step 4: Select gender and age"):

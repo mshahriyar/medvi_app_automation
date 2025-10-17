@@ -11,6 +11,7 @@ class GoalWeightPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
 
+<<<<<<< HEAD
     # ----------------------- Helpers -----------------------
 
     def _retry_action(self, func, retries=3, delay=2):
@@ -25,8 +26,41 @@ class GoalWeightPage(BasePage):
                 else:
                     self.log.error(f"❌ All {retries} attempts failed: {e}")
                     raise
+=======
+    @property
+    def frame(self):
+        """Always return a fresh frame locator to avoid stale references."""
+        return self.page.frame_locator(self.IFRAME_SELECTOR)
+>>>>>>> 05e40f9d1bfb7fa324d475e2337bb12ea415a04e
+
+    # ---------------------- Utilities ---------------------- #
+    @staticmethod
+    def escape_xpath_text(text: str) -> str:
+        """Safely escape text for XPath — handles both single and double quotes."""
+        if "'" not in text:
+            return f"'{text}'"
+        if '"' not in text:
+            return f'"{text}"'
+        parts = text.split("'")
+        return "concat(" + ", \"'\", ".join(f"'{part}'" for part in parts) + ")"
 
     # ---------------------- Actions ---------------------- #
+    @allure.step("Verify goal weight page heading displayed")
+    def verify_goal_weight_page_heading_displayed(self):
+        """Verify the goal weight page heading displayed."""
+        self.log.info("🔍 Verifying goal weight page heading displayed...")
+
+        # Safely escaped text for both headings
+        safe_text_1 = self.escape_xpath_text("We're in this together.")
+        safe_text_2 = self.escape_xpath_text("What is your goal weight?")
+
+        heading_1 = self.frame.locator(f"//*[normalize-space(text())={safe_text_1}]")
+        heading_2 = self.frame.locator(f"//*[normalize-space(text())={safe_text_2}]")
+
+        expect(heading_1).to_be_visible(timeout=self.DEFAULT_TIMEOUT)
+        expect(heading_2).to_be_visible(timeout=self.DEFAULT_TIMEOUT)
+
+        self.log.info("✅ Goal weight page headings verified successfully")
 
     @allure.step("Enter goal weight")
     def add_goal_weight(self, goal_weight: str):
@@ -34,6 +68,7 @@ class GoalWeightPage(BasePage):
         self._retry_action(lambda: self._fill_goal_weight(goal_weight))
         self.log.info(f"✅ Goal weight entered successfully: {goal_weight}")
 
+<<<<<<< HEAD
     @allure.step("Verify motivational text is visible")
     def verify_together_text(self):
         """Ensure motivational text appears."""
@@ -45,6 +80,8 @@ class GoalWeightPage(BasePage):
         except Exception as e:
             self.log.warning(f"⚠️ Motivational text not found: {e}")
 
+=======
+>>>>>>> 05e40f9d1bfb7fa324d475e2337bb12ea415a04e
     @allure.step("Click 'Next' button")
     def hit_next_button(self):
         """Click the 'Next' button safely."""
