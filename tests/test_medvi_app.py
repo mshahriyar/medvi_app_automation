@@ -280,7 +280,7 @@ def test_medvi_application_flow(
         submission_form.verify_edit_info_is_working()
         submission_form.hit_check_eligibility_button()
         submission_form.hit_submit_button()
-        print("Finally you did it!!!!!!!!!")
+        print("Submission form page submitted successfully")
 
 
     allure.attach(
